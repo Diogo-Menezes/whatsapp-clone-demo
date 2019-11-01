@@ -19,7 +19,7 @@ public class FirstScreen extends AppCompatActivity {
         //GET SESSION TOKEN
         if (isLogged) {
             finish();
-            startActivity(new Intent(this, ChatActivity.class));
+            startActivity(new Intent(this, MainUserListActivity.class));
         }
     }
 

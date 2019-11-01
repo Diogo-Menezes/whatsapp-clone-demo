@@ -12,8 +12,7 @@ public class ChatList {
     private Bitmap contactImage;
     private int from;
 
-    public ChatList() {
-    }
+
 
     public ChatList(String contactName, String lastMessage, String date, String unreadMessages, Bitmap contactImage, int from) {
         this.contactName = contactName;
@@ -23,7 +22,8 @@ public class ChatList {
         this.contactImage = contactImage;
         this.from = from;
     }
-
+    public ChatList() {
+    }
     public String getContactName() {
         return contactName;
     }
