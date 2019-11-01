@@ -28,7 +28,7 @@ import static com.diogomenezes.whatsappclonedemo.ChatActivity.FROM;
 import static com.diogomenezes.whatsappclonedemo.ChatActivity.MESSAGE;
 import static com.diogomenezes.whatsappclonedemo.ChatActivity.MESSAGE_PARSE_CLASS;
 import static com.diogomenezes.whatsappclonedemo.ChatActivity.TO;
-import static com.diogomenezes.whatsappclonedemo.MainActivity.USERNAME;
+import static com.diogomenezes.whatsappclonedemo.LoginActivity.USERNAME;
 
 public class UserListActivity2 extends AppCompatActivity implements ListView.OnItemClickListener {
     public static final String FRIEND_NAME = "friend_name";
@@ -144,7 +144,7 @@ public class UserListActivity2 extends AppCompatActivity implements ListView.OnI
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.sign_out_menu) {
             ParseUser.logOut();
-            startActivity(new Intent(UserListActivity2.this, MainActivity.class));
+            startActivity(new Intent(UserListActivity2.this, LoginActivity.class));
             finish();
             return true;
         }

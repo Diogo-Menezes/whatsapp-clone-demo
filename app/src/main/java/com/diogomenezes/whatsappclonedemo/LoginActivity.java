@@ -13,10 +13,8 @@ import com.parse.LogInCallback;
 import com.parse.ParseAnonymousUtils;
 import com.parse.ParseException;
 import com.parse.ParseUser;
-import com.parse.SignUpCallback;
-import com.parse.http.ParseHttpResponse;
 
-public class MainActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
 
     public static final String USERNAME = "username";
     private TextView userNameEdit, passEdit;
@@ -28,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setTitle("WhatsApp???");
+        setTitle("WhatsApp Login");
         userNameEdit = findViewById(R.id.nameEditText);
         passEdit = findViewById(R.id.passEditText);
         signInBtn = findViewById(R.id.signInButton);
@@ -93,7 +91,7 @@ ParseAnonymousUtils.logIn(new LogInCallback() {
                 public void done(ParseUser user, ParseException e) {
                     if (e != null) {
                         e.printStackTrace();
-                        Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     } else {
                         redirect();
                     }

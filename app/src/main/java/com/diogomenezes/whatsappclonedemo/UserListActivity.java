@@ -11,16 +11,13 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.parse.FindCallback;
 import com.parse.ParseException;
-import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import static com.diogomenezes.whatsappclonedemo.ChatActivity.MESSAGE_PARSE_CLASS;
-import static com.diogomenezes.whatsappclonedemo.MainActivity.USERNAME;
+import static com.diogomenezes.whatsappclonedemo.LoginActivity.USERNAME;
 
 public class UserListActivity extends AppCompatActivity implements ListView.OnItemClickListener {
     public static final String FRIEND_NAME = "friend_name";

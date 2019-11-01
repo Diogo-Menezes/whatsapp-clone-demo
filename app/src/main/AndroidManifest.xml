@@ -13,10 +13,11 @@
         android:roundIcon="@drawable/whatsapp_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".UserListActivity"></activity>
-        <activity android:name=".UserListActivity2"></activity>
-        <activity android:name=".ChatActivity"></activity>
-        <activity android:name=".MainActivity">
+        <activity android:name=".FirstScreen"></activity>
+        <activity android:name=".UserListActivity" />
+        <activity android:name=".UserListActivity2" />
+        <activity android:name=".ChatActivity" />
+        <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
