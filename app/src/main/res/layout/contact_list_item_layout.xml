@@ -31,6 +31,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="75"
                 android:maxLines="1"
+                android:ellipsize="end"
                 android:text="Contact Name"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -42,6 +43,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|end"
                 android:layout_weight="25"
+                android:maxLines="1"
                 android:text="05:45"
                 android:textAlignment="textEnd"
                 android:textColor="@android:color/darker_gray" />
@@ -65,7 +67,6 @@
                 android:layout_below="@id/contactNameChatTextView"
                 android:layout_weight="80"
                 android:ellipsize="end"
-
                 android:maxLines="1"
                 android:text="Hi.. what are you doing"
                 android:textColor="@android:color/darker_gray" />

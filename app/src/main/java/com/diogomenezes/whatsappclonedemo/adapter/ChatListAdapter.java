@@ -28,16 +28,17 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.chatLi
     class chatListAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView contactName, lastMessage, date, unreadMessages;
         private CircleImageView contactPicture;
-        private ContactClick mOnContactClick;
+        private ContactClick contactClick;
 
-        public chatListAdapterViewHolder(@NonNull View itemView, ContactClick contactClick) {
+        public chatListAdapterViewHolder(@NonNull View itemView, ContactClick click) {
             super(itemView);
             contactName = itemView.findViewById(R.id.contactNameChatTextView);
             lastMessage = itemView.findViewById(R.id.lastMessageChatTextView);
             date = itemView.findViewById(R.id.dateChatTextView);
             unreadMessages = itemView.findViewById(R.id.unreadMessageCountChatTextView);
             contactPicture = itemView.findViewById(R.id.contactImageChatList);
-            this.mOnContactClick = contactClick;
+            itemView.setOnClickListener(this);
+            this.contactClick = click;
         }
 
         @Override

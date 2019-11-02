@@ -53,7 +53,7 @@ public class MainUserListActivity extends AppCompatActivity implements ChatListA
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inScaled = false;
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.whatsapp_logo, options);
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.random_contact_picture, options);
 
         mChatList = new ArrayList<>();
         for (int i = 0; i < mNames.length; i++) {
@@ -70,6 +70,7 @@ public class MainUserListActivity extends AppCompatActivity implements ChatListA
 
     @Override
     public void contactClick(int position) {
+        System.out.println("Clicked" + position);
         Toast.makeText(this, mChatList.get(position).getContactName(), Toast.LENGTH_SHORT).show();
     }
 }
