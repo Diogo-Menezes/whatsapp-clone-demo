@@ -43,29 +43,31 @@
             android:layout_weight="10"
             android:tint="@color/green"
             android:src="@drawable/ic_videocam"
-            android:clickable="true"
-            android:focusable="true"/>
+            android:onClick="videoClick"/>
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="10"
             android:tint="@color/green"
-            android:src="@drawable/ic_phone" />
+            android:src="@drawable/ic_phone"
+            android:onClick="phoneClick"/>
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="10"
             android:tint="@color/green"
-            android:src="@drawable/ic_message" />
+            android:src="@drawable/ic_message"
+            android:onClick="messageClick"/>
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="10"
             android:tint="@color/green"
-            android:src="@drawable/ic_info_outline" />
+            android:src="@drawable/ic_info_outline"
+            android:onClick="contactInfoClick"/>
 
 
     </LinearLayout>

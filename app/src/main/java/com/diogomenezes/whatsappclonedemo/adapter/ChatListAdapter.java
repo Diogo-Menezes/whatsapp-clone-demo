@@ -17,7 +17,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.chatListAdapterViewHolder> {
 
-    private ArrayList<ChatList> mChatList;// = new ArrayList<>();
+    private ArrayList<ChatList> mChatList;
     private ContactClick mOnContactClick;
     private OnImageClick mOnImageClick;
 

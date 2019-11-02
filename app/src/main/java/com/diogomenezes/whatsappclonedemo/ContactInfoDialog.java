@@ -27,14 +27,7 @@ public class ContactInfoDialog extends DialogFragment {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         LayoutInflater inflater = requireActivity().getLayoutInflater();
         builder.setView(inflater.inflate(R.layout.contact_info_layout, null));
-        View view = LayoutInflater.from(requireActivity()).inflate(R.layout.contact_info_layout, null);
-        imageView = view.findViewById(R.id.callContact);
-        imageView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Toast.makeText(getContext(), "Click", Toast.LENGTH_SHORT).show();
-            }
-        });
+
         return builder.show();
     }
 }

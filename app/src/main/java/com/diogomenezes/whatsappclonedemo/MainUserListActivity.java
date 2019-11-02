@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.DialogFragment;
@@ -28,6 +30,8 @@ public class MainUserListActivity extends AppCompatActivity implements ChatListA
     private ArrayList<ChatList> mChatList;
     private ChatList mChat;
     private Bitmap bitmap;
+    private int contactPosition = 0;
+    private DialogFragment dialogFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +90,29 @@ public class MainUserListActivity extends AppCompatActivity implements ChatListA
     @Override
     public void contactImageClick(int position) {
         System.out.println(mChatList.get(position));
-        DialogFragment dialogFragment = new ContactInfoDialog();
+        dialogFragment = new ContactInfoDialog();
         dialogFragment.show(getSupportFragmentManager(), "contacInfo");
+        contactPosition = position;
     }
+
+    public void videoClick(View view) {
+        Toast.makeText(this, "VideoCall", Toast.LENGTH_SHORT).show();
+        dialogFragment.dismiss();
+    }
+
+    public void phoneClick(View view) {
+        Toast.makeText(this, "Call", Toast.LENGTH_SHORT).show();
+        dialogFragment.dismiss();
+    }
+
+    public void messageClick(View view) {
+        contactClick(contactPosition);
+        dialogFragment.dismiss();
+    }
+
+    public void contactInfoClick(View view) {
+        Toast.makeText(this, "Contact Info", Toast.LENGTH_SHORT).show();
+        dialogFragment.dismiss();
+    }
+
 }
