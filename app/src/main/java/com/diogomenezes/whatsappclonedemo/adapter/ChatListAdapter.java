@@ -14,6 +14,8 @@ import com.diogomenezes.whatsappclonedemo.models.ChatList;
 
 import java.util.ArrayList;
 
+import de.hdodenhof.circleimageview.CircleImageView;
+
 public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.chatListAdapterViewHolder> {
 
     private ArrayList<ChatList> mChatList;// = new ArrayList<>();
@@ -26,7 +28,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.chatLi
 
     class chatListAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView contactName, lastMessage, date, unreadMessages;
-        private ImageView contactPicture;
+        private CircleImageView contactPicture;
         private ContactClick mOnContactClick;
 
         public chatListAdapterViewHolder(@NonNull View itemView, ContactClick contactClick) {
@@ -53,7 +55,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.chatLi
     @NonNull
     @Override
     public chatListAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_list_item_layout, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_list_item_layout, parent, false);
         return new chatListAdapterViewHolder(view, mOnContactClick);
     }
 

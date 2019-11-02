@@ -1,6 +1,7 @@
 package com.diogomenezes.whatsappclonedemo;
 
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -29,8 +30,11 @@ public class MainUserListActivity extends AppCompatActivity implements ChatListA
 
         recyclerView = findViewById(R.id.userListRecView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inScaled = false;
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.whatsapp_logo, options);
 
-        mChat = new ChatList("Diogo", "Hi how are you??", "Yesterday", "", null);
+        mChat = new ChatList("Diogo", "Hi how are you??", "Yesterday", "", bitmap);
         mChatList = new ArrayList<>();
         mChatList.add(mChat);
         adapter = new ChatListAdapter(mChatList, this);

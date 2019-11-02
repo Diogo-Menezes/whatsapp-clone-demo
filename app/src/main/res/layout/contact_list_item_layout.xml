@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -11,14 +11,12 @@
         android:layout_height="wrap_content"
         android:layout_margin="12dp">
 
-        <ImageView
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/contactImageChatList"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentLeft="true"
-            android:layout_marginRight="8dp"
-            app:srcCompat="@mipmap/ic_launcher" />
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="8dp" />
 
         <LinearLayout
             android:id="@+id/firstLineLayout"
@@ -33,7 +31,7 @@
                 android:id="@+id/contactNameChatTextView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="80"
+                android:layout_weight="75"
                 android:maxLines="1"
                 android:text="Contact Name"
                 android:textSize="18sp"
@@ -44,10 +42,10 @@
                 android:id="@+id/dateChatTextView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_weight="20"
-                android:gravity="end"
+                android:layout_gravity="center|end"
+                android:layout_weight="25"
                 android:text="05:45"
+                android:textAlignment="textEnd"
                 android:textColor="@android:color/darker_gray" />
 
         </LinearLayout>
@@ -85,4 +83,4 @@
 
     </RelativeLayout>
 
-</LinearLayout>
+</RelativeLayout>
