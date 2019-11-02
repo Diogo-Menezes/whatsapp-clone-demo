@@ -13,7 +13,7 @@
         android:roundIcon="@drawable/whatsapp_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainUserListActivity"></activity>
+        <activity android:name=".MainUserListActivity" />
         <activity android:name=".FirstScreen" />
         <activity android:name=".UserListActivity2" />
         <activity android:name=".ChatActivity" />
