@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+        <item
+            android:id="@+id/chat_menu_action_video_call"
+            android:icon="@drawable/ic_videocam"
+            android:title="Videocall"
+            app:showAsAction="always" />
+        <item
+            android:id="@+id/chat_menu_action_call"
+            android:icon="@drawable/ic_phone"
+            android:title="call"
+            app:showAsAction="always" />
+        <item
+            android:id="@+id/chat_menu_action_watch_contact"
+            android:title="Watch contact" />
+        <item
+            android:id="@+id/chat_menu_action_files"
+            android:title="Files" />
+        <item
+            android:id="@+id/chat_menu_action_search"
+            android:title="Search" />
+        <item
+            android:id="@+id/chat_menu_action_notifications"
+            android:title="Deactivate Notifications" />
+        <item
+            android:id="@+id/chat_menu_action_background"
+            android:title="Background" />
+
+    <item
+        android:menuCategory="container"
+        android:title="More">
+        <menu>
+            <item
+                android:id="@+id/chat_menu_action_shortcut"
+                android:title="Add shortcut" />
+            <item
+                android:id="@+id/chat_menu_action_export_chat"
+                android:title="Export talk" />
+            <item
+                android:id="@+id/chat_menu_action_clean_chat"
+                android:title="Clean talk" />
+            <item
+                android:id="@+id/chat_menu_action_block_contact"
+                android:title="Block" />
+            <item
+                android:id="@+id/chat_menu_action_report"
+                android:title="Report" />
+        </menu>
+    </item>
+
+
+</menu>

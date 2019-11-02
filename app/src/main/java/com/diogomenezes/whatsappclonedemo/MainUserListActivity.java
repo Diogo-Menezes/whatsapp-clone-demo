@@ -1,9 +1,9 @@
 package com.diogomenezes.whatsappclonedemo;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -13,6 +13,8 @@ import com.diogomenezes.whatsappclonedemo.adapter.ChatListAdapter;
 import com.diogomenezes.whatsappclonedemo.models.ChatList;
 
 import java.util.ArrayList;
+
+import static com.diogomenezes.whatsappclonedemo.ChatActivity.FRIEND_NAME;
 
 public class MainUserListActivity extends AppCompatActivity implements ChatListAdapter.ContactClick {
 
@@ -57,7 +59,7 @@ public class MainUserListActivity extends AppCompatActivity implements ChatListA
 
         mChatList = new ArrayList<>();
         for (int i = 0; i < mNames.length; i++) {
-            mChat = new ChatList(mNames[i], messages[i], "Yesterday", ""+ i, bitmap);
+            mChat = new ChatList(mNames[i], messages[i], "Yesterday", "" + i, bitmap);
             mChatList.add(mChat);
         }
 
@@ -70,7 +72,9 @@ public class MainUserListActivity extends AppCompatActivity implements ChatListA
 
     @Override
     public void contactClick(int position) {
-        System.out.println("Clicked" + position);
-        Toast.makeText(this, mChatList.get(position).getContactName(), Toast.LENGTH_SHORT).show();
+
+        Intent intent = new Intent(MainUserListActivity.this, NewChatActivity.class);
+        intent.putExtra(FRIEND_NAME, mChatList.get(position).getContactName());
+        startActivity(intent);
     }
 }
