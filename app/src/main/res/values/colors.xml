@@ -4,4 +4,10 @@
     <color name="colorPrimary">#1EAE54</color>
     <color name="colorAccent">#49DF81</color>
     <color name="green">#25D366</color>
+    <color name="messageGrey">#9EAAAAAA</color>
+
+
+    <color name="greenPrimaryDark">#188B43</color>
+    <color name="greenPrimary">#1EAE54</color>
+    <color name="greenAccent">#49DF81</color>
 </resources>

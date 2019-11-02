@@ -12,20 +12,30 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.diogomenezes.whatsappclonedemo.adapter.MessageAdapter;
+import com.diogomenezes.whatsappclonedemo.models.ChatMessage;
+
+import java.util.ArrayList;
 
 import static com.diogomenezes.whatsappclonedemo.ChatActivity.FRIEND_NAME;
 
-public class NewChatActivity extends AppCompatActivity {
+public class NewChatActivity extends AppCompatActivity implements MessageAdapter.MessageClick {
 
+    public static final int FROM_FRIEND = 0;
+    public static final int FROM_USER = 1;
 
     //UI
     private RecyclerView mRecyclerView;
+    private MessageAdapter messageAdapter;
     private EditText messageEdit;
     private Button button;
 
-
     //VARS
+    private ArrayList<ChatMessage> mChatMessageList = new ArrayList<>();
+    private ChatMessage mChatMessage;
 
 
     @Override
@@ -34,24 +44,51 @@ public class NewChatActivity extends AppCompatActivity {
         setContentView(R.layout.activity_new_chat);
 
         messageEdit = findViewById(R.id.messageEdit);
-
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView = findViewById(R.id.chatRecView);
-        Intent intent = getIntent();
+        mRecyclerView.setLayoutManager(layoutManager);
+        messageAdapter = new MessageAdapter(mChatMessageList, this);
+        mRecyclerView.setAdapter(messageAdapter);
+        mRecyclerView.setHasFixedSize(true);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
+        Intent intent = getIntent();
         if (intent != null) {
             setTitle(intent.getStringExtra(FRIEND_NAME));
         }
 
-
+        fakeMessages();
     }
 
     public void sendMessage(View view) {
         Toast.makeText(this, "Message Sent", Toast.LENGTH_SHORT).show();
+    }
+
+
+    private void fakeMessages() {
+        String[] messages = {"Inceptos volutpat nonummy. Condimentum tempus ac tortor accumsan non aenean.",
+                "Volutpat sit duis. Varius. Posuere urna taciti convallis senectus praesent.",
+                "Arcu a odio magna Gravida porttitor ullamcorper. Enim, at netus.",
+                "Ultricies vivamus pellentesque at vivamus fermentum Non conubia eleifend orci.",
+                "Inceptos torquent a quam auctor, ornare sem aliquam in sociosqu.",
+                "Inceptos volutpat nonummy. ",
+                "Volutpat sit duis. Varius. ",
+                "Arcu a odio magna Gravida.",
+                "Ultricies vivamus pellentesque at vivamus.",
+                "Inceptos torquent a quam auctor, ornare sem aliquam in sociosqu."};
+        String[] messagesTime = {"00:10", "00:11", "00:12", "00:13", "00:15", "00:16", "00:18", "00:18", "00:19", "00:19"};
+        Integer[] from = {0, 1, 0, 1, 0, 1, 0, 1, 0, 0};
+
+        for (int i = 0; i < messages.length; i++) {
+            mChatMessage = new ChatMessage(messages[i], messagesTime[i], from[i]);
+            mChatMessageList.add(mChatMessage);
+        }
+        messageAdapter.notifyDataSetChanged();
+        mRecyclerView.smoothScrollToPosition(mChatMessageList.size());
     }
 
 
@@ -103,5 +140,10 @@ public class NewChatActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         finish();
         return true;
+    }
+
+    @Override
+    public void messageClicked(int position) {
+        Toast.makeText(this, mChatMessageList.get(position).getMessage(), Toast.LENGTH_SHORT).show();
     }
 }
