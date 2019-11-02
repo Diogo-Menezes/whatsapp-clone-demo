@@ -49,7 +49,7 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void redirect() {
-        startActivity(new Intent(this, UserListActivity2.class));
+        startActivity(new Intent(this, MainUserListActivity.class));
         finish();
 
     }

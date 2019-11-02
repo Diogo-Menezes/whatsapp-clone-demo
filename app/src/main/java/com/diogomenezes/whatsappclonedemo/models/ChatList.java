@@ -1,4 +1,4 @@
-package com.diogomenezes.whatsappclonedemo.object;
+package com.diogomenezes.whatsappclonedemo.models;
 
 import android.graphics.Bitmap;
 
@@ -10,17 +10,15 @@ public class ChatList {
             unreadMessages;
 
     private Bitmap contactImage;
-    private int from;
 
 
 
-    public ChatList(String contactName, String lastMessage, String date, String unreadMessages, Bitmap contactImage, int from) {
+    public ChatList(String contactName, String lastMessage, String date, String unreadMessages, Bitmap contactImage) {
         this.contactName = contactName;
         this.lastMessage = lastMessage;
         this.date = date;
         this.unreadMessages = unreadMessages;
         this.contactImage = contactImage;
-        this.from = from;
     }
     public ChatList() {
     }
@@ -64,11 +62,4 @@ public class ChatList {
         this.contactImage = contactImage;
     }
 
-    public int getFrom() {
-        return from;
-    }
-
-    public void setFrom(int from) {
-        this.from = from;
-    }
 }

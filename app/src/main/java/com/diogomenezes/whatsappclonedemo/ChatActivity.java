@@ -26,11 +26,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 
-import static com.diogomenezes.whatsappclonedemo.UserListActivity.FRIEND_NAME;
 
 public class ChatActivity extends AppCompatActivity implements AdapterView.OnItemLongClickListener, ListView.OnItemClickListener, View.OnClickListener {
+    public static final String FRIEND_NAME = "friendName";
     private static final String TAG = "ChatActivity";
     public static final String MESSAGE_PARSE_CLASS = "Messages";
     public static final String FROM = "from";
