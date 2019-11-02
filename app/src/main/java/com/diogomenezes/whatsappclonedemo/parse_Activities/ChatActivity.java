@@ -1,4 +1,4 @@
-package com.diogomenezes.whatsappclonedemo;
+package com.diogomenezes.whatsappclonedemo.parse_Activities;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,6 +14,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.diogomenezes.whatsappclonedemo.R;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;

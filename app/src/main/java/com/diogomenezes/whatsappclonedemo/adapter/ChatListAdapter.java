@@ -19,18 +19,21 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.chatLi
 
     private ArrayList<ChatList> mChatList;// = new ArrayList<>();
     private ContactClick mOnContactClick;
+    private OnImageClick mOnImageClick;
 
-    public ChatListAdapter(ArrayList<ChatList> mChatList, ContactClick mOnContactClick) {
+    public ChatListAdapter(ArrayList<ChatList> mChatList, ContactClick mOnContactClick, OnImageClick imageClick) {
         this.mChatList = mChatList;
         this.mOnContactClick = mOnContactClick;
+        this.mOnImageClick = imageClick;
     }
 
     class chatListAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private TextView contactName, lastMessage, date, unreadMessages;
         private CircleImageView contactPicture;
         private ContactClick contactClick;
+        private OnImageClick imageClick;
 
-        public chatListAdapterViewHolder(@NonNull View itemView, ContactClick click) {
+        public chatListAdapterViewHolder(@NonNull final View itemView, ContactClick click, OnImageClick imageClick) {
             super(itemView);
             contactName = itemView.findViewById(R.id.contactNameChatTextView);
             lastMessage = itemView.findViewById(R.id.lastMessageChatTextView);
@@ -39,14 +42,27 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.chatLi
             contactPicture = itemView.findViewById(R.id.contactImageChatList);
             itemView.setOnClickListener(this);
             this.contactClick = click;
+            this.imageClick = imageClick;
+
+            contactPicture.setOnClickListener(this);
         }
+
 
         @Override
         public void onClick(View v) {
-            mOnContactClick.contactClick(getAdapterPosition());
+            if (v.getId() == R.id.contactImageChatList) {
+                imageClick.contactImageClick(getAdapterPosition());
+            } else {
+                mOnContactClick.contactClick(getAdapterPosition());
+            }
 
         }
     }
+
+    public interface OnImageClick {
+        void contactImageClick(int position);
+    }
+
 
     public interface ContactClick {
         void contactClick(int position);
@@ -56,7 +72,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.chatLi
     @Override
     public chatListAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_list_item_layout, parent, false);
-        return new chatListAdapterViewHolder(view, mOnContactClick);
+        return new chatListAdapterViewHolder(view, mOnContactClick, mOnImageClick);
     }
 
     @Override
@@ -69,6 +85,11 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.chatLi
             holder.unreadMessages.setVisibility(View.GONE);
         } else {
             holder.unreadMessages.setText(mChatList.get(position).getUnreadMessages());
+//            int unread = Integer.valueOf(mChatList.get(position).getUnreadMessages());
+//            if (unread>999){
+//                holder.unreadMessages.setText("+999");
+//
+//            }
         }
         holder.contactPicture.setImageBitmap(mChatList.get(position).getContactImage());
     }

@@ -16,8 +16,8 @@
         <activity android:name=".NewChatActivity"/>
         <activity android:name=".MainUserListActivity" />
         <activity android:name=".FirstScreen" />
-        <activity android:name=".UserListActivity2" />
-        <activity android:name=".ChatActivity" />
+        <activity android:name=".parse_Activities.UserListActivity2" />
+        <activity android:name=".parse_Activities.ChatActivity" />
         <activity android:name=".LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

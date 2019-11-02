@@ -1,11 +1,13 @@
 package com.diogomenezes.whatsappclonedemo;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -18,9 +20,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.diogomenezes.whatsappclonedemo.adapter.MessageAdapter;
 import com.diogomenezes.whatsappclonedemo.models.ChatMessage;
 
+import java.text.DateFormat;
 import java.util.ArrayList;
 
-import static com.diogomenezes.whatsappclonedemo.ChatActivity.FRIEND_NAME;
+import static com.diogomenezes.whatsappclonedemo.parse_Activities.ChatActivity.FRIEND_NAME;
 
 public class NewChatActivity extends AppCompatActivity implements MessageAdapter.MessageClick {
 
@@ -36,7 +39,7 @@ public class NewChatActivity extends AppCompatActivity implements MessageAdapter
     //VARS
     private ArrayList<ChatMessage> mChatMessageList = new ArrayList<>();
     private ChatMessage mChatMessage;
-
+    private DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,9 +68,22 @@ public class NewChatActivity extends AppCompatActivity implements MessageAdapter
     }
 
     public void sendMessage(View view) {
-        Toast.makeText(this, "Message Sent", Toast.LENGTH_SHORT).show();
+        if (!messageEdit.getText().toString().isEmpty()) {
+            String message = messageEdit.getText().toString();
+            String time = dateFormat.format(System.currentTimeMillis());
+            mChatMessageList.add(new ChatMessage(message, time, FROM_USER));
+            messageEdit.setText("");
+            closeKeyboard();
+        }
+        messageAdapter.notifyItemInserted(mChatMessageList.size());
+
+
     }
 
+    public void closeKeyboard() {
+        InputMethodManager inputMethodManager = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.hideSoftInputFromWindow(messageEdit.getWindowToken(), 0);
+    }
 
     private void fakeMessages() {
         String[] messages = {"Inceptos volutpat nonummy. Condimentum tempus ac tortor accumsan non aenean.",
@@ -86,6 +102,7 @@ public class NewChatActivity extends AppCompatActivity implements MessageAdapter
         for (int i = 0; i < messages.length; i++) {
             mChatMessage = new ChatMessage(messages[i], messagesTime[i], from[i]);
             mChatMessageList.add(mChatMessage);
+
         }
         messageAdapter.notifyDataSetChanged();
         mRecyclerView.smoothScrollToPosition(mChatMessageList.size());
@@ -146,4 +163,6 @@ public class NewChatActivity extends AppCompatActivity implements MessageAdapter
     public void messageClicked(int position) {
         Toast.makeText(this, mChatMessageList.get(position).getMessage(), Toast.LENGTH_SHORT).show();
     }
+
+
 }

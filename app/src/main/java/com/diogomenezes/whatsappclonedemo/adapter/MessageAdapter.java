@@ -69,9 +69,10 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         holder.messageContent.setText(mChatMessageList.get(position).getMessage());
         holder.messsageTime.setText(mChatMessageList.get(position).getTime());
         if (mChatMessageList.get(position).getFrom() == FROM_FRIEND) {
-//            holder.messageBackground.setGravity(View.TEXT_ALIGNMENT_CENTER);
+            //COLOR GREY AND ALIGNED TO THE START
             holder.messageBackground.setBackgroundColor(friendBackgroundColor);
         } else {
+            //COLOR GREEN AND ALIGNED TO THE END
             holder.messageBackground.setBackgroundColor(userBackgroundColor);
         }
     }

@@ -1,4 +1,4 @@
-package com.diogomenezes.whatsappclonedemo;
+package com.diogomenezes.whatsappclonedemo.parse_Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,6 +12,8 @@ import android.widget.SimpleAdapter;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.diogomenezes.whatsappclonedemo.LoginActivity;
+import com.diogomenezes.whatsappclonedemo.R;
 import com.parse.FindCallback;
 import com.parse.ParseException;
 import com.parse.ParseObject;
@@ -23,11 +25,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.diogomenezes.whatsappclonedemo.ChatActivity.DATE;
-import static com.diogomenezes.whatsappclonedemo.ChatActivity.FROM;
-import static com.diogomenezes.whatsappclonedemo.ChatActivity.MESSAGE;
-import static com.diogomenezes.whatsappclonedemo.ChatActivity.MESSAGE_PARSE_CLASS;
-import static com.diogomenezes.whatsappclonedemo.ChatActivity.TO;
+import static com.diogomenezes.whatsappclonedemo.parse_Activities.ChatActivity.DATE;
+import static com.diogomenezes.whatsappclonedemo.parse_Activities.ChatActivity.FROM;
+import static com.diogomenezes.whatsappclonedemo.parse_Activities.ChatActivity.MESSAGE;
+import static com.diogomenezes.whatsappclonedemo.parse_Activities.ChatActivity.MESSAGE_PARSE_CLASS;
+import static com.diogomenezes.whatsappclonedemo.parse_Activities.ChatActivity.TO;
 import static com.diogomenezes.whatsappclonedemo.LoginActivity.USERNAME;
 
 public class UserListActivity2 extends AppCompatActivity implements ListView.OnItemClickListener {

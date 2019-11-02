@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -14,9 +15,9 @@ import com.diogomenezes.whatsappclonedemo.models.ChatList;
 
 import java.util.ArrayList;
 
-import static com.diogomenezes.whatsappclonedemo.ChatActivity.FRIEND_NAME;
+import static com.diogomenezes.whatsappclonedemo.parse_Activities.ChatActivity.FRIEND_NAME;
 
-public class MainUserListActivity extends AppCompatActivity implements ChatListAdapter.ContactClick {
+public class MainUserListActivity extends AppCompatActivity implements ChatListAdapter.ContactClick, ChatListAdapter.OnImageClick {
 
 
     //UI
@@ -28,46 +29,50 @@ public class MainUserListActivity extends AppCompatActivity implements ChatListA
     private ChatList mChat;
     private Bitmap bitmap;
 
-    private String[] mNames = {"Claudia Phung ", "Truman Blackstock ", "Madlyn Stults ",
-            "Chu Talton ", "Cherry Hier ", "Denisha Shuster ",
-            "Elinor Asher ", "Fredricka Castellanos ", "Nana Depaolo ", "Toni Webre"};
-
-    private String[] messages = {
-            "Inceptos volutpat nonummy. Condimentum tempus ac tortor accumsan non aenean.",
-            "Volutpat sit duis. Varius. Posuere urna taciti convallis senectus praesent.",
-            "Arcu a odio magna Gravida porttitor ullamcorper. Enim, at netus.",
-            "Ultricies vivamus pellentesque at vivamus fermentum Non conubia eleifend orci.",
-            "Inceptos torquent a quam auctor, ornare sem aliquam in sociosqu.",
-            "Inceptos volutpat nonummy. ",
-            "Volutpat sit duis. Varius. ",
-            "Arcu a odio magna Gravida.",
-            "Ultricies vivamus pellentesque at vivamus.",
-            "Inceptos torquent a quam auctor, ornare sem aliquam in sociosqu."
-    };
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_user_list);
 
+
         recyclerView = findViewById(R.id.userListRecView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        addFakeUsers();
+
+        adapter = new ChatListAdapter(mChatList, this, this);
+        recyclerView.setAdapter(adapter);
+
+
+    }
+
+    private void addFakeUsers() {
+        String[] mNames = {"Claudia Phung ", "Truman Blackstock ", "Madlyn Stults ",
+                "Chu Talton ", "Cherry Hier ", "Denisha Shuster ",
+                "Elinor Asher ", "Fredricka Castellanos ", "Nana Depaolo ", "Toni Webre"};
+
+        String[] messages = {
+                "Inceptos volutpat nonummy. Condimentum tempus ac tortor accumsan non aenean.",
+                "Volutpat sit duis. Varius. Posuere urna taciti convallis senectus praesent.",
+                "Arcu a odio magna Gravida porttitor ullamcorper. Enim, at netus.",
+                "Ultricies vivamus pellentesque at vivamus fermentum Non conubia eleifend orci.",
+                "Inceptos torquent a quam auctor, ornare sem aliquam in sociosqu.",
+                "Inceptos volutpat nonummy. ",
+                "Volutpat sit duis. Varius. ",
+                "Arcu a odio magna Gravida.",
+                "Ultricies vivamus pellentesque at vivamus.",
+                "Inceptos torquent a quam auctor, ornare sem aliquam in sociosqu."
+        };
+
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inScaled = false;
         Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.random_contact_picture, options);
 
         mChatList = new ArrayList<>();
         for (int i = 0; i < mNames.length; i++) {
-            mChat = new ChatList(mNames[i], messages[i], "Yesterday", "" + i, bitmap);
+            mChat = new ChatList(mNames[i], messages[i], "Yesterday", "" + 100 + i, bitmap);
             mChatList.add(mChat);
         }
-
-
-        adapter = new ChatListAdapter(mChatList, this);
-        recyclerView.setLayoutManager(layoutManager);
-        recyclerView.setAdapter(adapter);
-
     }
 
     @Override
@@ -76,5 +81,12 @@ public class MainUserListActivity extends AppCompatActivity implements ChatListA
         Intent intent = new Intent(MainUserListActivity.this, NewChatActivity.class);
         intent.putExtra(FRIEND_NAME, mChatList.get(position).getContactName());
         startActivity(intent);
+    }
+
+    @Override
+    public void contactImageClick(int position) {
+        System.out.println(mChatList.get(position));
+        DialogFragment dialogFragment = new ContactInfoDialog();
+        dialogFragment.show(getSupportFragmentManager(), "contacInfo");
     }
 }
