@@ -1,35 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/relativeLayoutChat"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="12dp">
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/contactImageChatList"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_centerVertical="true"
-            android:layout_marginRight="8dp" />
+            android:layout_marginRight="12dp" />
 
         <LinearLayout
             android:id="@+id/firstLineLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="8dp"
             android:layout_toRightOf="@id/contactImageChatList"
             android:orientation="horizontal"
             android:weightSum="100">
 
             <TextView
                 android:id="@+id/contactNameChatTextView"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="75"
                 android:maxLines="1"
@@ -40,7 +38,7 @@
 
             <TextView
                 android:id="@+id/dateChatTextView"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center|end"
                 android:layout_weight="25"
@@ -59,27 +57,45 @@
             android:orientation="horizontal"
             android:weightSum="100">
 
+
             <TextView
                 android:id="@+id/lastMessageChatTextView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/contactNameChatTextView"
-                android:layout_weight="90"
+                android:layout_weight="80"
+                android:ellipsize="end"
+
                 android:maxLines="1"
                 android:text="Hi.. what are you doing"
                 android:textColor="@android:color/darker_gray" />
 
+            <View
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="15" />
+
             <TextView
                 android:id="@+id/unreadMessageCountChatTextView"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="10"
-                android:background="@android:color/holo_green_light"
+                android:background="@drawable/circle"
                 android:gravity="center"
-                android:padding="4dp"
-                android:text="6"
-                android:textColor="@android:color/white" />
+                android:padding="1dp"
+                android:text="155"
+                android:textColor="@android:color/white"
+                android:textSize="12dp"
+                android:textStyle="bold" />
         </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/secondLayout"
+            android:layout_marginTop="8dp"
+            android:layout_toRightOf="@id/contactImageChatList"
+            android:alpha="0.5"
+            android:background="@android:color/darker_gray" />
 
     </RelativeLayout>
 

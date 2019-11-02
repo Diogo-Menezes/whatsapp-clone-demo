@@ -3,7 +3,6 @@ package com.diogomenezes.whatsappclonedemo.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -64,7 +63,12 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.chatLi
         holder.contactName.setText(mChatList.get(position).getContactName());
         holder.lastMessage.setText(mChatList.get(position).getLastMessage());
         holder.date.setText(mChatList.get(position).getDate());
-        holder.unreadMessages.setText(mChatList.get(position).getUnreadMessages());
+
+        if (mChatList.get(position).getUnreadMessages().equals("") || mChatList.get(position).getUnreadMessages().equals("0")) {
+            holder.unreadMessages.setVisibility(View.GONE);
+        } else {
+            holder.unreadMessages.setText(mChatList.get(position).getUnreadMessages());
+        }
         holder.contactPicture.setImageBitmap(mChatList.get(position).getContactImage());
     }
 

@@ -16,11 +16,32 @@ import java.util.ArrayList;
 
 public class MainUserListActivity extends AppCompatActivity implements ChatListAdapter.ContactClick {
 
+
+    //UI
     private RecyclerView recyclerView;
+
+    //VARS
     private ChatListAdapter adapter;
     private ArrayList<ChatList> mChatList;
     private ChatList mChat;
     private Bitmap bitmap;
+
+    private String[] mNames = {"Claudia Phung ", "Truman Blackstock ", "Madlyn Stults ",
+            "Chu Talton ", "Cherry Hier ", "Denisha Shuster ",
+            "Elinor Asher ", "Fredricka Castellanos ", "Nana Depaolo ", "Toni Webre"};
+
+    private String[] messages = {
+            "Inceptos volutpat nonummy. Condimentum tempus ac tortor accumsan non aenean.",
+            "Volutpat sit duis. Varius. Posuere urna taciti convallis senectus praesent.",
+            "Arcu a odio magna Gravida porttitor ullamcorper. Enim, at netus.",
+            "Ultricies vivamus pellentesque at vivamus fermentum Non conubia eleifend orci.",
+            "Inceptos torquent a quam auctor, ornare sem aliquam in sociosqu.",
+            "Inceptos volutpat nonummy. ",
+            "Volutpat sit duis. Varius. ",
+            "Arcu a odio magna Gravida.",
+            "Ultricies vivamus pellentesque at vivamus.",
+            "Inceptos torquent a quam auctor, ornare sem aliquam in sociosqu."
+    };
 
 
     @Override
@@ -32,11 +53,15 @@ public class MainUserListActivity extends AppCompatActivity implements ChatListA
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inScaled = false;
-        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),R.drawable.whatsapp_logo, options);
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.whatsapp_logo, options);
 
-        mChat = new ChatList("Diogo", "Hi how are you??", "Yesterday", "", bitmap);
         mChatList = new ArrayList<>();
-        mChatList.add(mChat);
+        for (int i = 0; i < mNames.length; i++) {
+            mChat = new ChatList(mNames[i], messages[i], "Yesterday", ""+ i, bitmap);
+            mChatList.add(mChat);
+        }
+
+
         adapter = new ChatListAdapter(mChatList, this);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(adapter);
