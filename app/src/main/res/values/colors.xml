@@ -10,4 +10,5 @@
     <color name="greenPrimaryDark">#188B43</color>
     <color name="greenPrimary">#1EAE54</color>
     <color name="greenAccent">#49DF81</color>
+    <color name="blackTransparent">#14000000</color>
 </resources>

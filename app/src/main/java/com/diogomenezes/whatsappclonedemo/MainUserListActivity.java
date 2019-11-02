@@ -89,10 +89,11 @@ public class MainUserListActivity extends AppCompatActivity implements ChatListA
 
     @Override
     public void contactImageClick(int position) {
-        System.out.println(mChatList.get(position));
-        dialogFragment = new ContactInfoDialog();
+//        contactPosition = position;
+        dialogFragment = new ContactInfoDialog(mChatList.get(position).getContactName(), R.drawable.random_contact_picture);
         dialogFragment.show(getSupportFragmentManager(), "contacInfo");
-        contactPosition = position;
+
+
     }
 
     public void videoClick(View view) {

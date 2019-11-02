@@ -3,6 +3,7 @@ package com.diogomenezes.whatsappclonedemo;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -25,8 +26,8 @@ import java.util.ArrayList;
 
 import static com.diogomenezes.whatsappclonedemo.parse_Activities.ChatActivity.FRIEND_NAME;
 
-public class NewChatActivity extends AppCompatActivity implements MessageAdapter.MessageClick {
-
+public class NewChatActivity extends AppCompatActivity implements MessageAdapter.MessageClick,View.OnClickListener{
+    private static final String TAG = "NewChatActivity";
     public static final int FROM_FRIEND = 0;
     public static final int FROM_USER = 1;
 
@@ -53,6 +54,7 @@ public class NewChatActivity extends AppCompatActivity implements MessageAdapter
         messageAdapter = new MessageAdapter(mChatMessageList, this);
         mRecyclerView.setAdapter(messageAdapter);
         mRecyclerView.setHasFixedSize(true);
+        messageEdit.setOnClickListener(this);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -68,14 +70,17 @@ public class NewChatActivity extends AppCompatActivity implements MessageAdapter
     }
 
     public void sendMessage(View view) {
+        int position=mChatMessageList.size();
         if (!messageEdit.getText().toString().isEmpty()) {
             String message = messageEdit.getText().toString();
             String time = dateFormat.format(System.currentTimeMillis());
             mChatMessageList.add(new ChatMessage(message, time, FROM_USER));
             messageEdit.setText("");
             closeKeyboard();
+            position = mChatMessageList.size();
         }
-        messageAdapter.notifyItemInserted(mChatMessageList.size());
+        messageAdapter.notifyItemInserted(position);
+        mRecyclerView.smoothScrollToPosition(position);
 
 
     }
@@ -165,4 +170,7 @@ public class NewChatActivity extends AppCompatActivity implements MessageAdapter
     }
 
 
+    @Override
+    public void onClick(View v) {
+    }
 }

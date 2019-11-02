@@ -3,16 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:layout_gravity="top">
 
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:id="@+id/contactImageInfo"
-        android:layout_width="match_parent"
-        android:layout_height="250dp">
 
         <ImageView
+            android:id="@+id/contactImageInfo"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="250dp"
             android:scaleType="centerCrop"
             app:srcCompat="@drawable/random_contact_picture" />
 
@@ -20,55 +18,54 @@
             android:id="@+id/contactNameInfo"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="8dp"
+            android:padding="4dp"
             android:text="Contact Name"
             android:textColor="@android:color/white"
-            android:textSize="18sp" />
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+            android:textSize="18sp"
+            android:background="@color/blackTransparent"/>
 
-    <LinearLayout
-        android:id="@+id/contactButtonsLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/contactImageInfo"
-        android:background="@android:color/white"
-        android:orientation="horizontal"
-        android:padding="12dp"
-        android:weightSum="40">
 
-        <ImageView
-            android:id="@+id/callContact"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:id="@+id/contactButtonsLayout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="10"
-            android:tint="@color/green"
-            android:src="@drawable/ic_videocam"
-            android:onClick="videoClick"/>
+            android:layout_below="@id/contactImageInfo"
+            android:background="@android:color/white"
+            android:orientation="horizontal"
+            android:padding="12dp"
+            android:weightSum="40">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="10"
-            android:tint="@color/green"
-            android:src="@drawable/ic_phone"
-            android:onClick="phoneClick"/>
+            <ImageView
+                android:id="@+id/callContact"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="10"
+                android:onClick="videoClick"
+                android:src="@drawable/ic_videocam"
+                android:tint="@color/green" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="10"
-            android:tint="@color/green"
-            android:src="@drawable/ic_message"
-            android:onClick="messageClick"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="10"
+                android:onClick="phoneClick"
+                android:src="@drawable/ic_phone"
+                android:tint="@color/green" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="10"
-            android:tint="@color/green"
-            android:src="@drawable/ic_info_outline"
-            android:onClick="contactInfoClick"/>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="10"
+                android:onClick="messageClick"
+                android:src="@drawable/ic_message"
+                android:tint="@color/green" />
 
-
-    </LinearLayout>
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="10"
+                android:onClick="contactInfoClick"
+                android:src="@drawable/ic_info_outline"
+                android:tint="@color/green" />
+        </LinearLayout>
 </RelativeLayout>
