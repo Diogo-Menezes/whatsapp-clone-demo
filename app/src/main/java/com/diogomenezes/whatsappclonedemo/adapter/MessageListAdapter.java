@@ -10,7 +10,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diogomenezes.whatsappclonedemo.R;
-import com.diogomenezes.whatsappclonedemo.models.MessageList;
+import com.diogomenezes.whatsappclonedemo.models.Message;
 
 import java.util.ArrayList;
 
@@ -20,10 +20,10 @@ import static com.diogomenezes.whatsappclonedemo.ChatActivity.FROM_USER;
 public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.MessageViewHolder> {
 
 
-    private ArrayList<MessageList> mChatMessageList;
+    private ArrayList<Message> mChatMessageList;
     private MessageClick mMessageClick;
 
-    public MessageListAdapter(ArrayList<MessageList> mChatMessage, MessageClick mMessageClick) {
+    public MessageListAdapter(ArrayList<Message> mChatMessage, MessageClick mMessageClick) {
         this.mChatMessageList = mChatMessage;
         this.mMessageClick = mMessageClick;
     }
@@ -60,7 +60,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
     @NonNull
     @Override
     public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new MessageViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_item_layout, parent, false), mMessageClick);
+        return new MessageViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chat_layout, parent, false), mMessageClick);
     }
 
     @Override
@@ -86,11 +86,11 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
 
     @Override
     public int getItemViewType(int position) {
-        return super.getItemViewType(position);
+        return position;
     }
 
     @Override
     public long getItemId(int position) {
-        return super.getItemId(position);
+        return position;
     }
 }

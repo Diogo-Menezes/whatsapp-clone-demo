@@ -3,6 +3,9 @@ package com.diogomenezes.whatsappclonedemo;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -11,6 +14,7 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
@@ -19,7 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diogomenezes.whatsappclonedemo.adapter.MessageListAdapter;
-import com.diogomenezes.whatsappclonedemo.models.MessageList;
+import com.diogomenezes.whatsappclonedemo.models.Message;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -36,17 +40,20 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
     private MessageListAdapter messageAdapter;
     private EditText messageEdit;
     private Button button;
+    private ImageView camImage;
 
     //VARS
-    private ArrayList<MessageList> mChatMessageList = new ArrayList<>();
-    private MessageList mChatMessage;
+    private ArrayList<Message> mChatMessageList = new ArrayList<>();
+    private Message mChatMessage;
     private DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
+    private int position;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_chat);
 
+        camImage = findViewById(R.id.camImage);
         messageEdit = findViewById(R.id.messageEdit);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView = findViewById(R.id.chatRecView);
@@ -54,7 +61,7 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
         messageAdapter = new MessageListAdapter(mChatMessageList, this);
         mRecyclerView.setAdapter(messageAdapter);
         mRecyclerView.setHasFixedSize(true);
-        messageEdit.setOnClickListener(this);
+        activateTextWatcher();
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -69,19 +76,49 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
         fakeMessages();
     }
 
-    public void sendMessage(View view) {
+    private void activateTextWatcher() {
+        messageEdit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                Log.i(TAG, "beforeTextChanged: called");
+            }
 
-        int position = 0;
-        Log.i(TAG, "sendMessage: List size start: " + mChatMessageList.size());
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                Log.i(TAG, "onTextChanged: called");
+                if (count > 0) {
+                    camImage.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                Log.i(TAG, "afterTextChanged: called");
+                if (s.equals("")) {
+                    camImage.setVisibility(View.VISIBLE);
+                }
+            }
+        });
+    }
+
+    public void sendMessage(View view) {
+        position = 0;
+        Log.i(TAG, "sendMessage: List size start: " + messageAdapter.getItemCount());
         if (!messageEdit.getText().toString().isEmpty()) {
             String message = messageEdit.getText().toString();
             String time = dateFormat.format(System.currentTimeMillis());
-            mChatMessageList.add(new MessageList(message, time, FROM_USER));
+            mChatMessageList.add(new Message(message, time, FROM_USER));
             messageEdit.setText("");
             position = mChatMessageList.size();
-            Log.i(TAG, "sendMessage: List size end: " + mChatMessageList.size());
-            messageAdapter.notifyDataSetChanged();
-            mRecyclerView.smoothScrollToPosition(messageAdapter.getItemCount());
+            messageAdapter.notifyItemInserted(position);
+            Log.i(TAG, "sendMessage: item count: " + messageAdapter.getItemCount());
+            Handler handler = new Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mRecyclerView.smoothScrollToPosition(position);
+                }
+            }, 100);
         }
 
 
@@ -107,7 +144,7 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
         Integer[] from = {0, 1, 0, 1, 0, 1, 0, 1, 0, 0};
 
         for (int i = 0; i < messages.length; i++) {
-            mChatMessage = new MessageList(messages[i], messagesTime[i], from[i]);
+            mChatMessage = new Message(messages[i], messagesTime[i], from[i]);
             mChatMessageList.add(mChatMessage);
 
         }

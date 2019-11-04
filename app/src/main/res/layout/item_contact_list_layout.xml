@@ -5,7 +5,6 @@
     android:orientation="vertical">
 
     <RelativeLayout
-        android:layout_marginTop="6dp"
         android:id="@+id/relativeLayoutChat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
@@ -103,6 +102,7 @@
             android:layout_height="1dp"
             android:layout_below="@id/secondLayout"
             android:layout_marginTop="10dp"
+            android:layout_marginBottom="6dp"
             android:layout_toRightOf="@id/contactImageChatList"
             android:alpha="0.5"
             android:background="@android:color/darker_gray" />

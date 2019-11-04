@@ -71,7 +71,7 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.chatLi
     @NonNull
     @Override
     public chatListAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.contact_list_item_layout, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_contact_list_layout, parent, false);
         return new chatListAdapterViewHolder(view, mOnContactClick, mOnImageClick);
     }
 
@@ -99,5 +99,13 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.chatLi
         return mChatList.size();
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        return position;
+    }
 
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
 }
