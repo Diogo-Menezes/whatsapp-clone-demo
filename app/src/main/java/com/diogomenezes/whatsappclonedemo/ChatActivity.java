@@ -1,7 +1,10 @@
 package com.diogomenezes.whatsappclonedemo;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -11,6 +14,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
@@ -23,6 +27,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -31,14 +37,17 @@ import com.diogomenezes.whatsappclonedemo.models.Message;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import static com.diogomenezes.whatsappclonedemo.parse_Activities.ParseChatActivity.FRIEND_NAME;
 
-public class ChatActivity extends AppCompatActivity implements MessageListAdapter.MessageClick, View.OnClickListener {
+public class ChatActivity extends AppCompatActivity implements MessageListAdapter.MessageClick, View.OnClickListener, View.OnTouchListener {
     private static final String TAG = "NewChatActivity";
     public static final int FROM_FRIEND = 0;
     public static final int FROM_USER = 1;
+    private static final int VOICE_RECORD = 0;
 
     //UI
     private RecyclerView mRecyclerView;
@@ -56,6 +65,7 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
     private int position;
     private boolean userScrolled = false;
     private int layoutManagerLastPosition;
+    long timePressed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,7 +86,8 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
         messageEdit.setOnEditorActionListener(editorActionListener);
         layoutManagerLastPosition = mChatMessageList.size() - 1;
         activateTextWatcher();
-
+        sendButton.setOnClickListener(this);
+        sendButton.setOnTouchListener(this);
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -273,7 +284,64 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
     }
 
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onClick(View v) {
+        if (v.getId() == R.id.floatingActionButton && !messageEdit.getText().toString().isEmpty()) {
+            sendMessage(v);
+        }
+    }
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
+        SimpleDateFormat format = new SimpleDateFormat("mm:ss", Locale.getDefault());
+        if (v.getId() == R.id.floatingActionButton && messageEdit.getText().toString().isEmpty()) {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                timePressed = System.currentTimeMillis();
+                //Start Record
+                recordAudio();
+                sendButton.animate().scaleX(1.4f).scaleY(1.4f).start();
+            }
+
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                //Stop Record
+                timePressed = System.currentTimeMillis() - timePressed;
+                Log.i(TAG, "onTouch: Record time " + format.format(timePressed));
+                sendButton.animate().scaleX(1f).scaleY(1f).start();
+            }
+            return true;
+        }
+
+
+        return false;
+    }
+
+    public void recordAudio() {
+        if (checkPermissions(Manifest.permission.RECORD_AUDIO)){
+            //START RECORD
+            Toast.makeText(this, "Start Record", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+    public boolean checkPermissions(String permission) {
+        if (ContextCompat.checkSelfPermission(ChatActivity.this, permission) == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        } else {
+            ActivityCompat.requestPermissions(ChatActivity.this, new String[]{permission}, VOICE_RECORD);
+            return false;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        switch (requestCode) {
+            case VOICE_RECORD:
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    Toast.makeText(this, "Press and hold the voice button.", Toast.LENGTH_SHORT).show();
+                }
+        }
     }
 }
