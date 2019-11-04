@@ -18,28 +18,28 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.diogomenezes.whatsappclonedemo.adapter.MessageAdapter;
-import com.diogomenezes.whatsappclonedemo.models.ChatMessage;
+import com.diogomenezes.whatsappclonedemo.adapter.MessageListAdapter;
+import com.diogomenezes.whatsappclonedemo.models.MessageList;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
 
-import static com.diogomenezes.whatsappclonedemo.parse_Activities.ChatActivity.FRIEND_NAME;
+import static com.diogomenezes.whatsappclonedemo.parse_Activities.ParseChatActivity.FRIEND_NAME;
 
-public class NewChatActivity extends AppCompatActivity implements MessageAdapter.MessageClick,View.OnClickListener{
+public class ChatActivity extends AppCompatActivity implements MessageListAdapter.MessageClick, View.OnClickListener {
     private static final String TAG = "NewChatActivity";
     public static final int FROM_FRIEND = 0;
     public static final int FROM_USER = 1;
 
     //UI
     private RecyclerView mRecyclerView;
-    private MessageAdapter messageAdapter;
+    private MessageListAdapter messageAdapter;
     private EditText messageEdit;
     private Button button;
 
     //VARS
-    private ArrayList<ChatMessage> mChatMessageList = new ArrayList<>();
-    private ChatMessage mChatMessage;
+    private ArrayList<MessageList> mChatMessageList = new ArrayList<>();
+    private MessageList mChatMessage;
     private DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
 
     @Override
@@ -51,7 +51,7 @@ public class NewChatActivity extends AppCompatActivity implements MessageAdapter
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView = findViewById(R.id.chatRecView);
         mRecyclerView.setLayoutManager(layoutManager);
-        messageAdapter = new MessageAdapter(mChatMessageList, this);
+        messageAdapter = new MessageListAdapter(mChatMessageList, this);
         mRecyclerView.setAdapter(messageAdapter);
         mRecyclerView.setHasFixedSize(true);
         messageEdit.setOnClickListener(this);
@@ -70,17 +70,19 @@ public class NewChatActivity extends AppCompatActivity implements MessageAdapter
     }
 
     public void sendMessage(View view) {
-        int position=mChatMessageList.size();
+
+        int position = 0;
+        Log.i(TAG, "sendMessage: List size start: " + mChatMessageList.size());
         if (!messageEdit.getText().toString().isEmpty()) {
             String message = messageEdit.getText().toString();
             String time = dateFormat.format(System.currentTimeMillis());
-            mChatMessageList.add(new ChatMessage(message, time, FROM_USER));
+            mChatMessageList.add(new MessageList(message, time, FROM_USER));
             messageEdit.setText("");
-            closeKeyboard();
             position = mChatMessageList.size();
+            Log.i(TAG, "sendMessage: List size end: " + mChatMessageList.size());
+            messageAdapter.notifyDataSetChanged();
+            mRecyclerView.smoothScrollToPosition(messageAdapter.getItemCount());
         }
-        messageAdapter.notifyItemInserted(position);
-        mRecyclerView.smoothScrollToPosition(position);
 
 
     }
@@ -105,7 +107,7 @@ public class NewChatActivity extends AppCompatActivity implements MessageAdapter
         Integer[] from = {0, 1, 0, 1, 0, 1, 0, 1, 0, 0};
 
         for (int i = 0; i < messages.length; i++) {
-            mChatMessage = new ChatMessage(messages[i], messagesTime[i], from[i]);
+            mChatMessage = new MessageList(messages[i], messagesTime[i], from[i]);
             mChatMessageList.add(mChatMessage);
 
         }

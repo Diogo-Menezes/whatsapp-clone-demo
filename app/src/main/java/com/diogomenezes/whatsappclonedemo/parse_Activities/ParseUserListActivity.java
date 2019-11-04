@@ -12,7 +12,6 @@ import android.widget.SimpleAdapter;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.diogomenezes.whatsappclonedemo.LoginActivity;
 import com.diogomenezes.whatsappclonedemo.R;
 import com.parse.FindCallback;
 import com.parse.ParseException;
@@ -25,14 +24,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.diogomenezes.whatsappclonedemo.parse_Activities.ChatActivity.DATE;
-import static com.diogomenezes.whatsappclonedemo.parse_Activities.ChatActivity.FROM;
-import static com.diogomenezes.whatsappclonedemo.parse_Activities.ChatActivity.MESSAGE;
-import static com.diogomenezes.whatsappclonedemo.parse_Activities.ChatActivity.MESSAGE_PARSE_CLASS;
-import static com.diogomenezes.whatsappclonedemo.parse_Activities.ChatActivity.TO;
-import static com.diogomenezes.whatsappclonedemo.LoginActivity.USERNAME;
+import static com.diogomenezes.whatsappclonedemo.parse_Activities.ParseChatActivity.DATE;
+import static com.diogomenezes.whatsappclonedemo.parse_Activities.ParseChatActivity.FROM;
+import static com.diogomenezes.whatsappclonedemo.parse_Activities.ParseChatActivity.MESSAGE;
+import static com.diogomenezes.whatsappclonedemo.parse_Activities.ParseChatActivity.MESSAGE_PARSE_CLASS;
+import static com.diogomenezes.whatsappclonedemo.parse_Activities.ParseChatActivity.TO;
+import static com.diogomenezes.whatsappclonedemo.parse_Activities.ParseLoginActivity.USERNAME;
 
-public class UserListActivity2 extends AppCompatActivity implements ListView.OnItemClickListener {
+public class ParseUserListActivity extends AppCompatActivity implements ListView.OnItemClickListener {
     public static final String FRIEND_NAME = "friend_name";
 
     private ListView userListView;
@@ -49,7 +48,7 @@ public class UserListActivity2 extends AppCompatActivity implements ListView.OnI
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_user_list_activity);
+        setContentView(R.layout.activity_friend_list);
         setTitle("Friend List");
         user = ParseUser.getCurrentUser();
         userListView = findViewById(R.id.userListView);
@@ -121,7 +120,7 @@ public class UserListActivity2 extends AppCompatActivity implements ListView.OnI
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (hasFriends) {
-            Intent intent = new Intent(UserListActivity2.this, ChatActivity.class);
+            Intent intent = new Intent(ParseUserListActivity.this, ParseChatActivity.class);
             intent.putExtra(FRIEND_NAME, mFriendList.get(position));
             startActivity(intent);
         }
@@ -146,7 +145,7 @@ public class UserListActivity2 extends AppCompatActivity implements ListView.OnI
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.sign_out_menu) {
             ParseUser.logOut();
-            startActivity(new Intent(UserListActivity2.this, LoginActivity.class));
+            startActivity(new Intent(ParseUserListActivity.this, ParseLoginActivity.class));
             finish();
             return true;
         }

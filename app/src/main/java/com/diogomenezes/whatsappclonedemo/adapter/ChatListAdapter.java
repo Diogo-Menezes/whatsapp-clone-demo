@@ -9,7 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diogomenezes.whatsappclonedemo.R;
-import com.diogomenezes.whatsappclonedemo.models.ChatList;
+import com.diogomenezes.whatsappclonedemo.models.ContactList;
 
 import java.util.ArrayList;
 
@@ -17,11 +17,11 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.chatListAdapterViewHolder> {
 
-    private ArrayList<ChatList> mChatList;
+    private ArrayList<ContactList> mChatList;
     private ContactClick mOnContactClick;
     private OnImageClick mOnImageClick;
 
-    public ChatListAdapter(ArrayList<ChatList> mChatList, ContactClick mOnContactClick, OnImageClick imageClick) {
+    public ChatListAdapter(ArrayList<ContactList> mChatList, ContactClick mOnContactClick, OnImageClick imageClick) {
         this.mChatList = mChatList;
         this.mOnContactClick = mOnContactClick;
         this.mOnImageClick = imageClick;

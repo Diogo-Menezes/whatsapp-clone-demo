@@ -4,38 +4,80 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".NewChatActivity">
+    tools:context=".ChatActivity">
+
+    <ImageView
+        android:id="@+id/backgroud"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:alpha="0.8"
+        android:scaleType="centerCrop"
+        android:src="@drawable/whattsapp_chat_background2"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chatRecView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="80dp"
-        app:layout_constraintBottom_toTopOf="@id/messageEdit"
+        app:layout_constraintBottom_toTopOf="@id/sendMessageLayout"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        />
+        app:layout_constraintVertical_bias="0.0" />
 
-    <EditText
-        android:id="@+id/messageEdit"
+    <LinearLayout
+        android:id="@+id/sendMessageLayout"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:ems="10"
-        android:hint="Type something..."
-        android:inputType="textPersonName"
-        app:layout_constraintEnd_toStartOf="@+id/sendBtn"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/chatRecView" />
+        android:layout_height="45dp"
+        android:layout_margin="4dp"
+        android:background="@drawable/chat_elipse"
+        android:orientation="horizontal"
+        android:weightSum="100"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/floatingActionButton"
+        app:layout_constraintStart_toStartOf="parent">
 
-    <ImageButton
-        android:id="@+id/sendBtn"
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:layout_margin="6dp"
+            android:layout_weight="10"
+            android:src="@drawable/ic_insert_emoticon" />
+
+        <EditText
+            android:id="@+id/messageEdit"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="70"
+            android:hint="Type something..."
+            android:inputType="textPersonName" />
+
+        <ImageView
+            android:layout_width="0dp"
+            android:layout_height="30dp"
+            android:layout_gravity="center"
+            android:layout_margin="6dp"
+            android:layout_weight="10"
+            android:src="@drawable/ic_insert_emoticon" />
+
+
+    </LinearLayout>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginBottom="4dp"
         android:onClick="sendMessage"
         android:src="@drawable/ic_send_24dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/chatRecView" />
+        app:fabCustomSize="45dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

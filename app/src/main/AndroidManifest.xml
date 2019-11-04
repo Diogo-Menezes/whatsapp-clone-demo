@@ -13,12 +13,12 @@
         android:roundIcon="@drawable/whatsapp_logo"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".NewChatActivity"/>
-        <activity android:name=".MainUserListActivity" />
+        <activity android:name=".ChatActivity"/>
+        <activity android:name=".FriendListActivity" />
         <activity android:name=".FirstScreen" />
-        <activity android:name=".parse_Activities.UserListActivity2" />
-        <activity android:name=".parse_Activities.ChatActivity" />
-        <activity android:name=".LoginActivity">
+        <activity android:name=".parse_Activities.ParseUserListActivity" />
+        <activity android:name=".parse_Activities.ParseChatActivity" />
+        <activity android:name=".parse_Activities.ParseLoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

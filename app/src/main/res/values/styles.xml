@@ -27,4 +27,28 @@
 
     <style name="ActionBarPopupThemeOverlay"></style>
 
+    <style name="mainMessageLayout">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:padding">8dp</item>
+
+    </style>
+
+    <style name="messageTimeStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">1dp</item>
+        <item name="android:layout_gravity">bottom|end</item>
+        <item name="android:textColor">@android:color/darker_gray</item>
+        <item name="android:textSize">12dp</item>
+    </style>
+
+    <style name="messageContentStyle">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
 </resources>

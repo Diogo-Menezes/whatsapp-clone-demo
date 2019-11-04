@@ -6,6 +6,8 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.diogomenezes.whatsappclonedemo.parse_Activities.ParseLoginActivity;
+
 public class FirstScreen extends AppCompatActivity {
     private boolean isLogged = false;
 
@@ -19,11 +21,11 @@ public class FirstScreen extends AppCompatActivity {
         //GET SESSION TOKEN
         if (isLogged) {
             finish();
-            startActivity(new Intent(this, MainUserListActivity.class));
+            startActivity(new Intent(this, FriendListActivity.class));
         }
     }
 
     public void agreeClicked(View view) {
-        startActivity(new Intent(this, LoginActivity.class));
+        startActivity(new Intent(this, ParseLoginActivity.class));
     }
 }

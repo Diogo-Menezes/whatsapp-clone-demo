@@ -16,7 +16,15 @@ import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.DialogFragment;
 
-public class ContactInfoDialog extends DialogFragment {
+
+/*
+*
+*  Dialog that results from the clicking in the contact image
+*  in the FriendListActivity
+*
+* */
+
+public class ImageClickDialog extends DialogFragment {
     private static final String TAG = "ContactInfoDialog";
 
     private TextView contactName;
@@ -25,10 +33,10 @@ public class ContactInfoDialog extends DialogFragment {
     private int mImage;
     private AlertDialog.Builder builder;
 
-    public ContactInfoDialog() {
+    public ImageClickDialog() {
     }
 
-    public ContactInfoDialog(String name, int image) {
+    public ImageClickDialog(String name, int image) {
         this.mName = name;
         this.mImage = image;
     }

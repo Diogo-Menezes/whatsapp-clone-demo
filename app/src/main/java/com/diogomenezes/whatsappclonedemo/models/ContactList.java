@@ -2,7 +2,7 @@ package com.diogomenezes.whatsappclonedemo.models;
 
 import android.graphics.Bitmap;
 
-public class ChatList {
+public class ContactList {
 
     private String contactName,
             lastMessage,
@@ -13,14 +13,14 @@ public class ChatList {
 
 
 
-    public ChatList(String contactName, String lastMessage, String date, String unreadMessages, Bitmap contactImage) {
+    public ContactList(String contactName, String lastMessage, String date, String unreadMessages, Bitmap contactImage) {
         this.contactName = contactName;
         this.lastMessage = lastMessage;
         this.date = date;
         this.unreadMessages = unreadMessages;
         this.contactImage = contactImage;
     }
-    public ChatList() {
+    public ContactList() {
     }
     public String getContactName() {
         return contactName;

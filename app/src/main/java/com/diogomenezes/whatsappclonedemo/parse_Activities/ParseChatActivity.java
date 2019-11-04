@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.Map;
 
 
-public class ChatActivity extends AppCompatActivity implements AdapterView.OnItemLongClickListener, ListView.OnItemClickListener, View.OnClickListener {
+public class ParseChatActivity extends AppCompatActivity implements AdapterView.OnItemLongClickListener, ListView.OnItemClickListener, View.OnClickListener {
     public static final String FRIEND_NAME = "friendName";
     private static final String TAG = "ChatActivity";
     public static final String MESSAGE_PARSE_CLASS = "Messages";
@@ -172,7 +172,7 @@ public class ChatActivity extends AppCompatActivity implements AdapterView.OnIte
     @Override
     public boolean onItemLongClick(AdapterView<?> parent, View view, int i, long id) {
         final int position = i;
-        AlertDialog.Builder builder = new AlertDialog.Builder(ChatActivity.this);
+        AlertDialog.Builder builder = new AlertDialog.Builder(ParseChatActivity.this);
         builder.setTitle("Delete").setMessage("Are you sure you want to delete this message?").setNegativeButton("Cancel", null);
         builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
             @Override

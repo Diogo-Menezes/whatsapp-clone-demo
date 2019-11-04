@@ -5,7 +5,7 @@
     android:id="@+id/chatLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".parse_Activities.ChatActivity">
+    tools:context=".parse_Activities.ParseChatActivity">
 
     <ListView
         android:id="@+id/messagesListView"

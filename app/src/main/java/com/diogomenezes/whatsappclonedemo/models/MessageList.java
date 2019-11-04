@@ -1,15 +1,15 @@
 package com.diogomenezes.whatsappclonedemo.models;
 
-public class ChatMessage {
+public class MessageList {
 
     private String message;
     private String time;
     private int from;
 
-    public ChatMessage() {
+    public MessageList() {
     }
 
-    public ChatMessage(String message, String time, int from) {
+    public MessageList(String message, String time, int from) {
         this.message = message;
         this.time = time;
         this.from = from;

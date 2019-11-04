@@ -1,4 +1,4 @@
-package com.diogomenezes.whatsappclonedemo;
+package com.diogomenezes.whatsappclonedemo.parse_Activities;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,12 +9,14 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.diogomenezes.whatsappclonedemo.FriendListActivity;
+import com.diogomenezes.whatsappclonedemo.R;
 import com.parse.LogInCallback;
 import com.parse.ParseAnonymousUtils;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
-public class LoginActivity extends AppCompatActivity {
+public class ParseLoginActivity extends AppCompatActivity {
 
     public static final String USERNAME = "username";
     private TextView userNameEdit, passEdit;
@@ -49,38 +51,24 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void redirect() {
-        startActivity(new Intent(this, MainUserListActivity.class));
+        startActivity(new Intent(this, FriendListActivity.class));
         finish();
 
     }
 
     public void signUpClick(View view) {
-ParseAnonymousUtils.logIn(new LogInCallback() {
-    @Override
-    public void done(ParseUser user, ParseException e) {
-        if (e==null){
-            System.out.println("nice");
-            redirect();
-        }else {
-            e.printStackTrace();
-            e.getMessage();
-        }
-    }
-});
-        /*
-        if (checkFields()) {
-            ParseUser user = new ParseUser();
-            user.setUsername(username);
-            user.setPassword(password);
-            user.signUpInBackground(new SignUpCallback() {
-                @Override
-                public void done(ParseException e) {
-                    if (e != null) {
-                        Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
+        ParseAnonymousUtils.logIn(new LogInCallback() {
+            @Override
+            public void done(ParseUser user, ParseException e) {
+                if (e == null) {
+                    System.out.println("nice");
+                    redirect();
+                } else {
+                    e.printStackTrace();
+                    e.getMessage();
                 }
-            });
-        }*/
+            }
+        });
     }
 
 
@@ -91,7 +79,7 @@ ParseAnonymousUtils.logIn(new LogInCallback() {
                 public void done(ParseUser user, ParseException e) {
                     if (e != null) {
                         e.printStackTrace();
-                        Toast.makeText(LoginActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ParseLoginActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     } else {
                         redirect();
                     }

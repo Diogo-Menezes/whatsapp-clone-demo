@@ -5,14 +5,15 @@
     android:orientation="vertical">
 
     <RelativeLayout
+        android:layout_marginTop="6dp"
         android:id="@+id/relativeLayoutChat"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/contactImageChatList"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
             android:layout_centerVertical="true"
             android:layout_marginRight="12dp" />
 
@@ -32,6 +33,7 @@
                 android:layout_weight="75"
                 android:ellipsize="end"
                 android:maxLines="1"
+                android:layout_marginStart="1dp"
                 android:text="Contact Name"
                 android:textSize="18sp"
                 android:textStyle="bold" />
@@ -84,7 +86,7 @@
                 android:minWidth="20dp"
                 android:layout_marginTop="2dp"
                 android:layout_marginBottom="2dp"
-                android:background="@drawable/circle"
+                android:background="@drawable/unread_message_circle"
                 android:gravity="center"
                 android:maxLines="1"
                 android:paddingLeft="2dp"
@@ -100,7 +102,7 @@
             android:layout_width="match_parent"
             android:layout_height="1dp"
             android:layout_below="@id/secondLayout"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="10dp"
             android:layout_toRightOf="@id/contactImageChatList"
             android:alpha="0.5"
             android:background="@android:color/darker_gray" />

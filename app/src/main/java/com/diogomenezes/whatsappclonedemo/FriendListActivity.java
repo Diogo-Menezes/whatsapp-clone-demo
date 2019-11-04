@@ -13,13 +13,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diogomenezes.whatsappclonedemo.adapter.ChatListAdapter;
-import com.diogomenezes.whatsappclonedemo.models.ChatList;
+import com.diogomenezes.whatsappclonedemo.models.ContactList;
 
 import java.util.ArrayList;
 
-import static com.diogomenezes.whatsappclonedemo.parse_Activities.ChatActivity.FRIEND_NAME;
+import static com.diogomenezes.whatsappclonedemo.parse_Activities.ParseChatActivity.FRIEND_NAME;
 
-public class MainUserListActivity extends AppCompatActivity implements ChatListAdapter.ContactClick, ChatListAdapter.OnImageClick {
+public class FriendListActivity extends AppCompatActivity implements ChatListAdapter.ContactClick, ChatListAdapter.OnImageClick {
 
 
     //UI
@@ -27,8 +27,8 @@ public class MainUserListActivity extends AppCompatActivity implements ChatListA
 
     //VARS
     private ChatListAdapter adapter;
-    private ArrayList<ChatList> mChatList;
-    private ChatList mChat;
+    private ArrayList<ContactList> mChatList;
+    private ContactList mChat;
     private Bitmap bitmap;
     private int contactPosition = 0;
     private DialogFragment dialogFragment;
@@ -36,7 +36,7 @@ public class MainUserListActivity extends AppCompatActivity implements ChatListA
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main_user_list);
+        setContentView(R.layout.activity_friend_user_list);
 
 
         recyclerView = findViewById(R.id.userListRecView);
@@ -74,7 +74,7 @@ public class MainUserListActivity extends AppCompatActivity implements ChatListA
 
         mChatList = new ArrayList<>();
         for (int i = 0; i < mNames.length; i++) {
-            mChat = new ChatList(mNames[i], messages[i], "Yesterday", "" + 100 + i, bitmap);
+            mChat = new ContactList(mNames[i], messages[i], "Yesterday", "" + 100 + i, bitmap);
             mChatList.add(mChat);
         }
     }
@@ -82,7 +82,7 @@ public class MainUserListActivity extends AppCompatActivity implements ChatListA
     @Override
     public void contactClick(int position) {
 
-        Intent intent = new Intent(MainUserListActivity.this, NewChatActivity.class);
+        Intent intent = new Intent(FriendListActivity.this, ChatActivity.class);
         intent.putExtra(FRIEND_NAME, mChatList.get(position).getContactName());
         startActivity(intent);
     }
@@ -90,7 +90,7 @@ public class MainUserListActivity extends AppCompatActivity implements ChatListA
     @Override
     public void contactImageClick(int position) {
 //        contactPosition = position;
-        dialogFragment = new ContactInfoDialog(mChatList.get(position).getContactName(), R.drawable.random_contact_picture);
+        dialogFragment = new ImageClickDialog(mChatList.get(position).getContactName(), R.drawable.random_contact_picture);
         dialogFragment.show(getSupportFragmentManager(), "contacInfo");
 
 
