@@ -16,9 +16,11 @@ import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -44,29 +46,35 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
     private EditText messageEdit;
     private FloatingActionButton sendButton;
     private ImageView camImage, attachImage;
+    private LinearLayout sendMessageLayout;
+    private LinearLayoutManager layoutManager;
 
     //VARS
     private ArrayList<Message> mChatMessageList = new ArrayList<>();
     private Message mChatMessage;
     private DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
     private int position;
+    private boolean userScrolled = false;
+    private int layoutManagerLastPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_chat);
 
+        sendMessageLayout = findViewById(R.id.sendMessageLayout);
         sendButton = findViewById(R.id.floatingActionButton);
         attachImage = findViewById(R.id.attachImage);
         camImage = findViewById(R.id.camImage);
         messageEdit = findViewById(R.id.messageEdit);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager = new LinearLayoutManager(this);
         mRecyclerView = findViewById(R.id.chatRecView);
         mRecyclerView.setLayoutManager(layoutManager);
         messageAdapter = new MessageListAdapter(mChatMessageList, this);
         mRecyclerView.setAdapter(messageAdapter);
         mRecyclerView.setHasFixedSize(true);
         messageEdit.setOnEditorActionListener(editorActionListener);
+        layoutManagerLastPosition = mChatMessageList.size() - 1;
         activateTextWatcher();
 
 
@@ -81,12 +89,44 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
         }
 
         fakeMessages();
+        layoutManagerLastPosition = mChatMessageList.size() - 1;
+
+
+        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+//                Log.i(TAG, "onScrollStateChanged: " +newState);
+                if (newState == 0) {
+                    layoutManagerLastPosition = layoutManager.findLastVisibleItemPosition();
+                }
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                Log.i(TAG, "onScrolled: " + layoutManagerLastPosition + " " + layoutManager.findLastVisibleItemPosition());
+            }
+        });
+
+
+        sendMessageLayout.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                Log.i(TAG, "onLayoutChange: called");
+
+                if (messageEdit.hasFocus() && !userScrolled) {
+                    mRecyclerView.smoothScrollToPosition(messageAdapter.getItemCount());
+                }
+            }
+        });
     }
 
     private TextView.OnEditorActionListener editorActionListener = new TextView.OnEditorActionListener() {
         @Override
         public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-            Log.i(TAG, "onEditorAction: "+actionId);
+            Log.i(TAG, "onEditorAction: " + actionId);
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 Log.i(TAG, "onEditorAction: called");
                 return true;
@@ -107,20 +147,19 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
                 if (s.toString().isEmpty()) {
                     camImage.animate().translationX(0f).alpha(1).setDuration(100);
                     attachImage.animate().translationX(0f).setDuration(100);
-                    sendButton.animate().alpha(0).setDuration(100);
                     sendButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_mic));
-                    sendButton.animate().alpha(1).setDuration(200);
+
                 } else {
                     camImage.animate().translationX(200f).alpha(0).setDuration(100);
                     attachImage.animate().translationX(120f).setDuration(100);
-                    sendButton.animate().alpha(0).setDuration(100);
                     sendButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_send));
-                    sendButton.animate().alpha(1).setDuration(200);
+
                 }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
+
             }
         });
     }
@@ -143,6 +182,7 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
                     mRecyclerView.smoothScrollToPosition(position);
                 }
             }, 100);
+            layoutManagerLastPosition = mChatMessageList.size() - 1;
         }
 
 

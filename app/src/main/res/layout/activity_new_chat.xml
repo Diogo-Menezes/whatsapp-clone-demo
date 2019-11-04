@@ -7,7 +7,7 @@
     tools:context=".ChatActivity">
 
     <ImageView
-        android:id="@+id/backgroud"
+        android:id="@+id/background"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:alpha="0.8"
@@ -15,18 +15,31 @@
         android:src="@drawable/whattsapp_chat_background2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.0" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chatRecView"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:padding="8dp"
+        app:layout_constraintBottom_toTopOf="@id/viewDivider"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.6"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/sendMessageLayout"/>
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <View
+        android:id="@+id/viewDivider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/sendMessageLayout"
+        app:layout_constraintTop_toBottomOf="@id/chatRecView"
+        />
 
     <LinearLayout
         android:id="@+id/sendMessageLayout"
@@ -40,7 +53,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/floatingActionButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/chatRecView">
+        app:layout_constraintTop_toBottomOf="@id/viewDivider">
 
         <ImageView
             android:id="@+id/emojiImage"

@@ -21,13 +21,14 @@
             <TextView
                 android:id="@+id/userMessageContent"
                 style="@style/messageContentStyle"
-                android:text="Message Content" />
+                android:text="Message Content"
+                android:paddingRight="14dp"/>
 
             <TextView
                 android:id="@+id/userMessageTime"
                 style="@style/messageTimeStyle"
                 android:text="05:46"
-                android:paddingRight="12dp"/>
+                android:paddingRight="14dp"/>
 
 
 
