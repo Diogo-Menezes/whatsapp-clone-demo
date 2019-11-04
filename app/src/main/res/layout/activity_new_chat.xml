@@ -20,14 +20,13 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/chatRecView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:paddingBottom="55dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintHorizontal_bias="0.6"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/sendMessageLayout"/>
 
     <LinearLayout
         android:id="@+id/sendMessageLayout"
@@ -35,52 +34,55 @@
         android:layout_height="45dp"
         android:layout_margin="6dp"
         android:background="@drawable/chat_elipse"
+        android:minHeight="45dp"
         android:orientation="horizontal"
         android:weightSum="100"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/floatingActionButton"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/chatRecView">
 
         <ImageView
             android:id="@+id/emojiImage"
-            android:layout_width="0dp"
+            android:layout_width="25dp"
             android:layout_height="30dp"
             android:layout_gravity="center"
             android:layout_margin="6dp"
-            android:layout_weight="10"
+
             android:src="@drawable/ic_insert_emoticon" />
 
         <EditText
             android:id="@+id/messageEdit"
             android:layout_width="0dp"
-            android:layout_height="45dp"
-            android:layout_weight="65"
+            android:layout_height="wrap_content"
+            android:layout_weight="95"
             android:background="@android:color/transparent"
             android:hint="Type a message..."
-            android:inputType="textPersonName" />
+            android:inputType="textImeMultiLine"
+            android:maxLength="20"
+            android:minHeight="45dp" />
 
         <ImageView
             android:id="@+id/attachImage"
-            android:layout_width="0dp"
+            android:layout_width="25dp"
             android:layout_height="30dp"
             android:layout_gravity="center"
             android:layout_margin="6dp"
-            android:layout_weight="8
-"
             android:src="@drawable/ic_attach" />
 
         <View
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="5" />
+            android:layout_weight="2" />
 
         <ImageView
             android:id="@+id/camImage"
-            android:layout_width="0dp"
+            android:layout_width="25dp"
             android:layout_height="30dp"
             android:layout_gravity="center"
             android:layout_margin="6dp"
-            android:layout_weight="8"
+            android:paddingStart="4dp"
+            android:paddingLeft="4dp"
             android:src="@drawable/ic_cam" />
 
 
@@ -96,7 +98,7 @@
         android:layout_marginRight="6dp"
         android:layout_marginBottom="6dp"
         android:onClick="sendMessage"
-        android:src="@drawable/ic_send_24dp"
+        android:src="@drawable/ic_mic"
         app:fabCustomSize="45dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />

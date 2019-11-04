@@ -7,14 +7,16 @@ import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBar;
@@ -24,6 +26,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.diogomenezes.whatsappclonedemo.adapter.MessageListAdapter;
 import com.diogomenezes.whatsappclonedemo.models.Message;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.DateFormat;
 import java.util.ArrayList;
@@ -39,8 +42,8 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
     private RecyclerView mRecyclerView;
     private MessageListAdapter messageAdapter;
     private EditText messageEdit;
-    private Button button;
-    private ImageView camImage;
+    private FloatingActionButton sendButton;
+    private ImageView camImage, attachImage;
 
     //VARS
     private ArrayList<Message> mChatMessageList = new ArrayList<>();
@@ -53,6 +56,8 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_chat);
 
+        sendButton = findViewById(R.id.floatingActionButton);
+        attachImage = findViewById(R.id.attachImage);
         camImage = findViewById(R.id.camImage);
         messageEdit = findViewById(R.id.messageEdit);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -61,7 +66,9 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
         messageAdapter = new MessageListAdapter(mChatMessageList, this);
         mRecyclerView.setAdapter(messageAdapter);
         mRecyclerView.setHasFixedSize(true);
+        messageEdit.setOnEditorActionListener(editorActionListener);
         activateTextWatcher();
+
 
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -76,27 +83,44 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
         fakeMessages();
     }
 
+    private TextView.OnEditorActionListener editorActionListener = new TextView.OnEditorActionListener() {
+        @Override
+        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            Log.i(TAG, "onEditorAction: "+actionId);
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                Log.i(TAG, "onEditorAction: called");
+                return true;
+            }
+            return false;
+        }
+    };
+
     private void activateTextWatcher() {
+
         messageEdit.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                Log.i(TAG, "beforeTextChanged: called");
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                Log.i(TAG, "onTextChanged: called");
-                if (count > 0) {
-                    camImage.setVisibility(View.GONE);
+                if (s.toString().isEmpty()) {
+                    camImage.animate().translationX(0f).alpha(1).setDuration(100);
+                    attachImage.animate().translationX(0f).setDuration(100);
+                    sendButton.animate().alpha(0).setDuration(100);
+                    sendButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_mic));
+                    sendButton.animate().alpha(1).setDuration(200);
+                } else {
+                    camImage.animate().translationX(200f).alpha(0).setDuration(100);
+                    attachImage.animate().translationX(120f).setDuration(100);
+                    sendButton.animate().alpha(0).setDuration(100);
+                    sendButton.setImageDrawable(getResources().getDrawable(R.drawable.ic_send));
+                    sendButton.animate().alpha(1).setDuration(200);
                 }
             }
 
             @Override
             public void afterTextChanged(Editable s) {
-                Log.i(TAG, "afterTextChanged: called");
-                if (s.equals("")) {
-                    camImage.setVisibility(View.VISIBLE);
-                }
             }
         });
     }
