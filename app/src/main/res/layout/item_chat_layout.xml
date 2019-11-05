@@ -38,6 +38,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/friendMessageLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/userMainMessageLayout"
@@ -47,7 +48,7 @@
         android:layout_marginRight="40dp">
 
         <LinearLayout
-            android:id="@+id/friendMessageLayout"
+
             style="@style/mainMessageLayout"
             android:background="@drawable/friend_buble1"
             android:backgroundTint="@android:color/white">
@@ -66,4 +67,66 @@
                 android:text="05:46" />
         </LinearLayout>
     </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/friendVoiceMessage"
+        android:layout_below="@id/friendMessageLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minWidth="10dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginStart="40dp"
+        android:layout_marginLeft="40dp">
+
+        <LinearLayout
+            style="@style/mainMessageLayout"
+            android:background="@drawable/user_buble1">
+            <TextView
+                style="@style/messageContentStyle"
+                android:text="Message Content"
+                android:paddingRight="14dp"/>
+
+            <TextView
+
+                style="@style/messageTimeStyle"
+                android:text="05:46"
+                android:paddingRight="14dp"/>
+
+
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/friendVoiceMessage"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginEnd="40dp"
+        android:layout_marginRight="40dp">
+
+        <LinearLayout
+            style="@style/mainMessageLayout"
+            android:background="@drawable/friend_buble1"
+            android:backgroundTint="@android:color/white">
+
+            <TextView
+
+                style="@style/messageContentStyle"
+                android:layout_marginStart="12dp"
+                android:layout_marginEnd="12dp"
+                android:layout_marginRight="12dp"
+                android:text="Message Content" />
+
+            <TextView
+
+                style="@style/messageTimeStyle"
+                android:text="05:46" />
+        </LinearLayout>
+    </LinearLayout>
+
 </RelativeLayout>

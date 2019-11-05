@@ -300,7 +300,7 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
                 timePressed = System.currentTimeMillis();
                 //Start Record
                 recordAudio();
-                sendButton.animate().scaleX(1.4f).scaleY(1.4f).start();
+                sendButton.animate().scaleX(1.6f).scaleY(1.6f).start();
             }
 
             if (event.getAction() == MotionEvent.ACTION_UP) {

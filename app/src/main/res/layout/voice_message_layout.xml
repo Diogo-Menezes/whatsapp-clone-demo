@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <RelativeLayout
+        style="@style/mainMessageLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="50dp"
+        android:layout_marginLeft="50dp"
+        android:background="@drawable/user_buble1">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/userImage"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/random_contact_picture" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="38dp"
+            android:layout_marginLeft="38dp"
+            android:layout_marginTop="35dp"
+            android:src="@drawable/ic_mic"
+            android:tint="@color/iconGray" />
+
+        <ImageView
+            android:id="@+id/playAudio"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/userImage"
+            android:src="@drawable/ic_play"
+            android:onClick="playUserAudio"/>
+
+        <SeekBar
+            android:thumbTint="@color/iconGray"
+            android:id="@+id/audioSeekBar"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="14dp"
+            android:layout_marginRight="14dp"
+            android:layout_toRightOf="@id/playAudio" />
+
+        <TextView
+            android:id="@+id/audioTime"
+            style="@style/messageTimeStyle"
+            android:layout_below="@+id/audioSeekBar"
+            android:layout_toRightOf="@id/playAudio"
+            android:text="00:46" />
+
+        <TextView
+            android:id="@+id/messageDate"
+            style="@style/messageTimeStyle"
+            android:layout_below="@id/audioSeekBar"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:paddingRight="14dp"
+            android:text="05:46" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        style="@style/mainMessageLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="50dp"
+        android:layout_marginRight="50dp"
+        android:background="@drawable/friend_buble1">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/friendImage"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/random_contact_picture" />
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginEnd="38dp"
+            android:layout_marginRight="38dp"
+            android:layout_marginTop="35dp"
+            android:src="@drawable/ic_mic"
+            android:tint="@android:color/holo_blue_light" />
+
+        <ImageView
+            android:id="@+id/playFriendAudio"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ic_play"
+            android:onClick="playFriendAudio"/>
+
+        <SeekBar
+            android:thumbTint="@android:color/holo_blue_light"
+            android:id="@+id/friendAudioSeekBar"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="14dp"
+            android:layout_marginRight="14dp"
+            android:layout_toRightOf="@id/playFriendAudio"
+            android:layout_toLeftOf="@id/friendImage"/>
+
+        <TextView
+            android:id="@+id/friendAudioTime"
+            style="@style/messageTimeStyle"
+            android:layout_below="@+id/friendAudioSeekBar"
+            android:layout_toRightOf="@id/playFriendAudio"
+            android:text="00:46" />
+
+        <TextView
+            android:id="@+id/friendMessageDate"
+            style="@style/messageTimeStyle"
+            android:layout_below="@id/friendAudioSeekBar"
+            android:layout_toLeftOf="@id/friendImage"
+            android:paddingRight="14dp"
+            android:text="05:46" />
+
+    </RelativeLayout>
+</LinearLayout>
