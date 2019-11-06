@@ -5,22 +5,24 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.media.MediaPlayer;
+import android.media.MediaRecorder;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,18 +38,26 @@ import com.diogomenezes.whatsappclonedemo.adapter.MessageListAdapter;
 import com.diogomenezes.whatsappclonedemo.models.Message;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.Timer;
+import java.util.TimerTask;
 
+import static com.diogomenezes.whatsappclonedemo.models.Message.IMAGE_MESSAGE;
+import static com.diogomenezes.whatsappclonedemo.models.Message.TEXT_MESSAGE;
+import static com.diogomenezes.whatsappclonedemo.models.Message.VIDEO_MESSAGE;
+import static com.diogomenezes.whatsappclonedemo.models.Message.VOICE_MESSAGE;
 import static com.diogomenezes.whatsappclonedemo.parse_Activities.ParseChatActivity.FRIEND_NAME;
 
-public class ChatActivity extends AppCompatActivity implements MessageListAdapter.MessageClick, View.OnClickListener, View.OnTouchListener {
+public class ChatActivity extends AppCompatActivity implements MessageListAdapter.MessageLongClick, View.OnClickListener, View.OnTouchListener {
     private static final String TAG = "NewChatActivity";
     public static final int FROM_FRIEND = 0;
     public static final int FROM_USER = 1;
-    private static final int VOICE_RECORD = 0;
+    private static final int REQUEST_RECORD_AUDIO_PERMISSION = 123;
 
     //UI
     private RecyclerView mRecyclerView;
@@ -61,13 +71,21 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
     //VARS
     private ArrayList<Message> mChatMessageList = new ArrayList<>();
     private Message mChatMessage;
-    private DateFormat dateFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
+    private DateFormat timeFormat = DateFormat.getTimeInstance(DateFormat.SHORT);
+    private SimpleDateFormat voiceFormat = new SimpleDateFormat("mm:ss");
     private int position;
     private boolean userScrolled = false;
     private int layoutManagerLastPosition;
-    long timePressed;
+    private long timePressed, timeStopped;
+    private MediaRecorder recorder;
+    private String fileName, voiceDuration;
+    private Message mMessage;
+    private MediaPlayer mediaPlayer;
+    private boolean isPlaying = false;
+    private SeekBar seekBar;
 
     @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_chat);
@@ -83,7 +101,6 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
         messageAdapter = new MessageListAdapter(mChatMessageList, this);
         mRecyclerView.setAdapter(messageAdapter);
         mRecyclerView.setHasFixedSize(true);
-        messageEdit.setOnEditorActionListener(editorActionListener);
         layoutManagerLastPosition = mChatMessageList.size() - 1;
         activateTextWatcher();
         sendButton.setOnClickListener(this);
@@ -104,20 +121,19 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
 
 
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-//                Log.i(TAG, "onScrollStateChanged: " +newState);
-                if (newState == 0) {
-                    layoutManagerLastPosition = layoutManager.findLastVisibleItemPosition();
-                }
-                super.onScrollStateChanged(recyclerView, newState);
-            }
-
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
-                Log.i(TAG, "onScrolled: " + layoutManagerLastPosition + " " + layoutManager.findLastVisibleItemPosition());
+                //state 1 = userScroll
+                if (recyclerView.getScrollState() == 1) {
+                    layoutManagerLastPosition = layoutManager.findLastVisibleItemPosition();
+
+                    if (layoutManagerLastPosition == mChatMessageList.size() - 1) {
+                        userScrolled = false;
+                    } else {
+                        userScrolled = true;
+                    }
+                }
             }
         });
 
@@ -125,8 +141,6 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
         sendMessageLayout.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
-                Log.i(TAG, "onLayoutChange: called");
-
                 if (messageEdit.hasFocus() && !userScrolled) {
                     mRecyclerView.smoothScrollToPosition(messageAdapter.getItemCount());
                 }
@@ -134,17 +148,6 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
         });
     }
 
-    private TextView.OnEditorActionListener editorActionListener = new TextView.OnEditorActionListener() {
-        @Override
-        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-            Log.i(TAG, "onEditorAction: " + actionId);
-            if (actionId == EditorInfo.IME_ACTION_DONE) {
-                Log.i(TAG, "onEditorAction: called");
-                return true;
-            }
-            return false;
-        }
-    };
 
     private void activateTextWatcher() {
 
@@ -175,17 +178,36 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
         });
     }
 
-    public void sendMessage(View view) {
+    public void sendMessage(int type) {
         position = 0;
-        Log.i(TAG, "sendMessage: List size start: " + messageAdapter.getItemCount());
-        if (!messageEdit.getText().toString().isEmpty()) {
-            String message = messageEdit.getText().toString();
-            String time = dateFormat.format(System.currentTimeMillis());
-            mChatMessageList.add(new Message(message, time, FROM_USER));
-            messageEdit.setText("");
+        String time = timeFormat.format(System.currentTimeMillis());
+
+
+        switch (type) {
+            case TEXT_MESSAGE:
+                if (!messageEdit.getText().toString().isEmpty()) {
+                    mMessage = new Message(TEXT_MESSAGE, messageEdit.getText().toString(), time, FROM_USER);
+                    messageEdit.setText("");
+                }
+                break;
+            case VOICE_MESSAGE:
+                mMessage = new Message(VOICE_MESSAGE, time, fileName, voiceDuration, FROM_USER);
+                break;
+            case VIDEO_MESSAGE:
+                //check for text
+                mMessage = new Message(VIDEO_MESSAGE, fileName, time, FROM_USER);
+                break;
+            case IMAGE_MESSAGE:
+                //check for text
+                mMessage = new Message(IMAGE_MESSAGE, fileName, time, FROM_USER);
+                break;
+        }
+
+        if (mMessage != null) {
+            mChatMessageList.add(mMessage);
             position = mChatMessageList.size();
             messageAdapter.notifyItemInserted(position);
-            Log.i(TAG, "sendMessage: item count: " + messageAdapter.getItemCount());
+
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
@@ -195,8 +217,6 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
             }, 100);
             layoutManagerLastPosition = mChatMessageList.size() - 1;
         }
-
-
     }
 
     public void closeKeyboard() {
@@ -219,7 +239,7 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
         Integer[] from = {0, 1, 0, 1, 0, 1, 0, 1, 0, 0};
 
         for (int i = 0; i < messages.length; i++) {
-            mChatMessage = new Message(messages[i], messagesTime[i], from[i]);
+            mChatMessage = new Message(TEXT_MESSAGE, messages[i], messagesTime[i], from[i]);
             mChatMessageList.add(mChatMessage);
 
         }
@@ -279,8 +299,60 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
     }
 
     @Override
-    public void messageClicked(int position) {
-        Toast.makeText(this, mChatMessageList.get(position).getMessage(), Toast.LENGTH_SHORT).show();
+    public void messageLongClicked(int position) {
+        if (mChatMessageList.get(position).getType() == VOICE_MESSAGE) {
+            playVoice(position);
+        }
+    }
+
+    private void playVoice(int position) {
+
+        if (mediaPlayer != null && !isPlaying) {
+            mediaPlayer = null;
+            seekBar = null;
+        }
+        File file = new File(mChatMessageList.get(position).getVoiceMailUri());
+        mediaPlayer = MediaPlayer.create(this, Uri.fromFile(file));
+        mediaPlayer.start();
+
+        seekBar = layoutManager.findViewByPosition(position).findViewById(R.id.userVoiceSeekBar);
+        seekBar.setTag(position);
+
+        Log.i(TAG, "playVoice: seekbar tag" + seekBar.getTag().toString());
+        final View root = layoutManager.findViewByPosition(position).getRootView();
+
+        final TextView textView1 = root.findViewById(R.id.userVoiceDuration);
+        seekBar.setMax(mediaPlayer.getDuration());
+
+        //TIMER FOR CONTROL SEEKBAR
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                if (mediaPlayer!=null){
+                    seekBar.setProgress(mediaPlayer.getCurrentPosition());
+                    textView1.setText(String.valueOf(mediaPlayer.getCurrentPosition()));
+                }
+            }
+        }, 0, 1000);
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                mediaPlayer.seekTo(progress);
+                textView1.setText(String.valueOf(mediaPlayer.getCurrentPosition()));
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                mediaPlayer.pause();
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                mediaPlayer.start();
+            }
+        });
     }
 
 
@@ -288,49 +360,93 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.floatingActionButton && !messageEdit.getText().toString().isEmpty()) {
-            sendMessage(v);
+            sendMessage(TEXT_MESSAGE);
         }
     }
+
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         SimpleDateFormat format = new SimpleDateFormat("mm:ss", Locale.getDefault());
+
+        boolean downTouch = false;
         if (v.getId() == R.id.floatingActionButton && messageEdit.getText().toString().isEmpty()) {
-            if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                timePressed = System.currentTimeMillis();
-                //Start Record
-                recordAudio();
-                sendButton.animate().scaleX(1.6f).scaleY(1.6f).start();
-            }
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    //Start Record
+                    timePressed = System.currentTimeMillis();
+                    recordAudio();
+                    sendButton.animate().scaleX(1.6f).scaleY(1.6f).setDuration(100).start();
+//                    downTouch = true;
+                    return true;
 
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                //Stop Record
-                timePressed = System.currentTimeMillis() - timePressed;
-                Log.i(TAG, "onTouch: Record time " + format.format(timePressed));
-                sendButton.animate().scaleX(1f).scaleY(1f).start();
+                case MotionEvent.ACTION_UP:
+//                    if (!downTouch) {
+//                        v.performClick();
+//                    } else {
+                    //Stop Record
+                    sendButton.animate().scaleX(1f).scaleY(1f).setDuration(100).start();
+                    timeStopped = System.currentTimeMillis();
+                    long duration = timeStopped - timePressed;
+                    voiceDuration = voiceFormat.format(duration);
+                    if (recorder != null) {
+                        stopAudioRecord();
+                        sendMessage(VOICE_MESSAGE);
+                    }
+//                    }
+                    return true;
+                default:
+                    break;
             }
-            return true;
         }
-
-
         return false;
     }
 
-    public void recordAudio() {
-        if (checkPermissions(Manifest.permission.RECORD_AUDIO)){
-            //START RECORD
-            Toast.makeText(this, "Start Record", Toast.LENGTH_SHORT).show();
-        }
+    private void stopAudioRecord() {
+        recorder.stop();
+        recorder.release();
+        recorder = null;
+        System.out.println("PATH: " + fileName.toString());
+
     }
 
+    public void recordAudio() {
+        // Record to the external cache directory for visibility
+        SimpleDateFormat sdf = new SimpleDateFormat("YYYYMMddss");
+        fileName = getExternalCacheDir().getAbsolutePath();
+        fileName += "/PTT-" + sdf.format(System.currentTimeMillis()) + ".3gp";
+
+        if (checkPermissions(Manifest.permission.RECORD_AUDIO)) {
+            recorder = new MediaRecorder();
+            recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+            recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+            recorder.setOutputFile(fileName);
+            recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+
+            try {
+                recorder.prepare();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            recorder.start();
+        }
+    }
 
     public boolean checkPermissions(String permission) {
         if (ContextCompat.checkSelfPermission(ChatActivity.this, permission) == PackageManager.PERMISSION_GRANTED) {
             return true;
         } else {
-            ActivityCompat.requestPermissions(ChatActivity.this, new String[]{permission}, VOICE_RECORD);
+            ActivityCompat.requestPermissions(ChatActivity.this, new String[]{permission}, REQUEST_RECORD_AUDIO_PERMISSION);
             return false;
         }
+    }
+
+    public void playUserAudio(View view) {
+//        Toast.makeText(this, "Play Audio", Toast.LENGTH_SHORT).show();
+    }
+
+    public void playFriendAudio(View view) {
+//        Toast.makeText(this, "Play Audio", Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -338,10 +454,15 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         switch (requestCode) {
-            case VOICE_RECORD:
+            case REQUEST_RECORD_AUDIO_PERMISSION:
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     Toast.makeText(this, "Press and hold the voice button.", Toast.LENGTH_SHORT).show();
+                    break;
                 }
+                //ADD OTHER PERMISSIONS HERE
+            default:
+                break;
+
         }
     }
 }
