@@ -91,6 +91,8 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
     private SeekBar seekBar;
     private Timer timer;
 
+    private
+
     @Override
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -549,4 +551,7 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
         });
     }
 
+    public void backPressClick(View view) {
+        super.onBackPressed();
+    }
 }

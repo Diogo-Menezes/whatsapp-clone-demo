@@ -34,8 +34,8 @@
 
         <ImageView
             android:id="@+id/playUserAudio"
-            android:layout_width="25dp"
-            android:layout_height="30dp"
+            android:layout_width="35dp"
+            android:layout_height="40dp"
             android:layout_centerVertical="true"
             android:layout_marginStart="8dp"
             android:layout_toEndOf="@id/userImage"
@@ -71,6 +71,7 @@
     </RelativeLayout>
 
     <RelativeLayout
+        tools:visibility="visible"
         android:visibility="gone"
         android:id="@+id/friendVoiceMessageLayout"
         style="@style/mainMessageLayout"
@@ -100,8 +101,8 @@
 
         <ImageView
             android:id="@+id/playFriendAudio"
-            android:layout_width="25dp"
-            android:layout_height="30dp"
+            android:layout_width="35dp"
+            android:layout_height="40dp"
             android:layout_centerVertical="true"
             android:layout_marginStart="10dp"
             android:background="?selectableItemBackgroundBorderless"

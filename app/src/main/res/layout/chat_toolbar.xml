@@ -14,10 +14,11 @@
             android:id="@+id/toolbar_chat_backPress"
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:src="@drawable/ic_arrow_back"
-            android:clickable="true"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:focusable="true" />
+            android:clickable="true"
+            android:focusable="true"
+            android:onClick="backPressClick"
+            android:src="@drawable/ic_arrow_back" />
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/toolbar_chat_contactImage"
@@ -26,14 +27,14 @@
             android:src="@drawable/random_contact_picture" />
 
         <TextView
-            style="@style/TextAppearance.AppCompat.Title"
             android:id="@+id/toolbar_chat_name"
+            style="@style/TextAppearance.AppCompat.Subhead"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="Contact Name"
-            android:layout_marginStart="4dp"/>
+            android:textStyle="bold"/>
 
 
     </LinearLayout>

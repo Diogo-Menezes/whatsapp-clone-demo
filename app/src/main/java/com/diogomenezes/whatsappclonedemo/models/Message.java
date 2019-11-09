@@ -2,6 +2,12 @@ package com.diogomenezes.whatsappclonedemo.models;
 
 import android.graphics.Bitmap;
 
+import androidx.annotation.NonNull;
+import androidx.room.ColumnInfo;
+import androidx.room.Entity;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "message_table")
 public class Message {
 
     public static final int TEXT_MESSAGE = 0;
@@ -9,15 +15,48 @@ public class Message {
     public static final int IMAGE_MESSAGE = 2;
     public static final int VIDEO_MESSAGE = 3;
 
+    public Message(String message, int from, int to, int type, long date) {
+        this.message = message;
+        this.from = from;
+        this.to = to;
+        this.type = type;
+        this.date = date;
+    }
 
-    private int id;
+    @NonNull
+    @PrimaryKey(autoGenerate = true)
+    private int messageID;
+
+    @ColumnInfo(name = "message")
     private String message;
+
+    @ColumnInfo(name = "message_time")
     private String time;
+
+    @NonNull
+    @ColumnInfo(name = "from_id")
     private int from;
+
+    @NonNull
+    @ColumnInfo(name = "to_id")
+    private int to;
+
+    @ColumnInfo(name = "image_message")
     private Bitmap bitmap;
+
+    @ColumnInfo(name = "voice_mail_uri")
     private String voiceMailUri;
+
+    @ColumnInfo(name = "voice_mail_duration")
     private String voiceMailDuration;
+
+    @NonNull
+    @ColumnInfo(name = "message_type")
     private int type;
+
+    @NonNull
+    @ColumnInfo(name = "message_date")
+    private long date;
 
     public Message() {
     }
@@ -34,7 +73,7 @@ public class Message {
         this.bitmap = bitmap;
     }
 
-    public Message(int type, String time, String voiceMailUri, String voiceMailDuration,int from) {
+    public Message(int type, String time, String voiceMailUri, String voiceMailDuration, int from) {
         this.type = type;
         this.time = time;
         this.from = from;
