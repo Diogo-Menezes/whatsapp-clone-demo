@@ -28,7 +28,6 @@
             android:title="Background" />
 
     <item
-        android:menuCategory="container"
         android:title="More">
         <menu>
             <item

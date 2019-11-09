@@ -1,7 +1,6 @@
 package com.diogomenezes.whatsappclonedemo;
 
 import android.Manifest;
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -27,8 +26,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -36,6 +35,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.diogomenezes.whatsappclonedemo.adapter.MessageListAdapter;
 import com.diogomenezes.whatsappclonedemo.models.Message;
+import com.diogomenezes.whatsappclonedemo.util.VoicePlayer;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.io.File;
@@ -58,6 +58,7 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
     public static final int FROM_FRIEND = 0;
     public static final int FROM_USER = 1;
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 123;
+    private static final long MINIMUM_VOICE_CLIP_DURATION = 900;
 
     //UI
     private RecyclerView mRecyclerView;
@@ -67,6 +68,11 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
     private ImageView camImage, attachImage;
     private LinearLayout sendMessageLayout;
     private LinearLayoutManager layoutManager;
+    private TextView voiceTextTime;
+    private ImageView emojiImage, voiceMicImage;
+    private TextView voiceDurationText;
+    private VoicePlayer voicePlayer = null;
+
 
     //VARS
     private ArrayList<Message> mChatMessageList = new ArrayList<>();
@@ -76,13 +82,14 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
     private int position;
     private boolean userScrolled = false;
     private int layoutManagerLastPosition;
-    private long timePressed, timeStopped;
+    private long timePressed, timeStopped, duration, timeCounter;
     private MediaRecorder recorder;
-    private String fileName, voiceDuration;
+    private String voiceFile, voiceDuration;
     private Message mMessage;
     private MediaPlayer mediaPlayer;
     private boolean isPlaying = false;
     private SeekBar seekBar;
+    private Timer timer;
 
     @Override
 
@@ -90,36 +97,41 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_chat);
 
+        //UI
+        voiceTextTime = findViewById(R.id.voiceTextTime);
+        voiceMicImage = findViewById(R.id.voiceMic);
+        emojiImage = findViewById(R.id.emojiImage);
         sendMessageLayout = findViewById(R.id.sendMessageLayout);
+        messageEdit = findViewById(R.id.messageEdit);
         sendButton = findViewById(R.id.floatingActionButton);
         attachImage = findViewById(R.id.attachImage);
         camImage = findViewById(R.id.camImage);
-        messageEdit = findViewById(R.id.messageEdit);
-        layoutManager = new LinearLayoutManager(this);
+        layoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
         mRecyclerView = findViewById(R.id.chatRecView);
         mRecyclerView.setLayoutManager(layoutManager);
         messageAdapter = new MessageListAdapter(mChatMessageList, this);
         mRecyclerView.setAdapter(messageAdapter);
         mRecyclerView.setHasFixedSize(true);
-        layoutManagerLastPosition = mChatMessageList.size() - 1;
         activateTextWatcher();
         sendButton.setOnClickListener(this);
         sendButton.setOnTouchListener(this);
-
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
+//        getSupportActionBar().hide();
+        Toolbar toolbar = (androidx.appcompat.widget.Toolbar) findViewById(R.id.toolbar_chat_title);
+        setSupportActionBar(toolbar);
+        if (toolbar != null) {
+            //Do something
         }
-
         Intent intent = getIntent();
         if (intent != null) {
             setTitle(intent.getStringExtra(FRIEND_NAME));
         }
 
         fakeMessages();
-        layoutManagerLastPosition = mChatMessageList.size() - 1;
+        activateListeners();
+    }
 
 
+    private void activateListeners() {
         mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
@@ -191,15 +203,15 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
                 }
                 break;
             case VOICE_MESSAGE:
-                mMessage = new Message(VOICE_MESSAGE, time, fileName, voiceDuration, FROM_USER);
+                mMessage = new Message(VOICE_MESSAGE, time, voiceFile, voiceDuration, FROM_USER);
                 break;
             case VIDEO_MESSAGE:
                 //check for text
-                mMessage = new Message(VIDEO_MESSAGE, fileName, time, FROM_USER);
+                mMessage = new Message(VIDEO_MESSAGE, voiceFile, time, FROM_USER);
                 break;
             case IMAGE_MESSAGE:
                 //check for text
-                mMessage = new Message(IMAGE_MESSAGE, fileName, time, FROM_USER);
+                mMessage = new Message(IMAGE_MESSAGE, voiceFile, time, FROM_USER);
                 break;
         }
 
@@ -301,62 +313,15 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
     @Override
     public void messageLongClicked(int position) {
         if (mChatMessageList.get(position).getType() == VOICE_MESSAGE) {
-            playVoice(position);
+            if (voicePlayer == null) {
+                voicePlayer = new VoicePlayer(this, mChatMessageList, layoutManager);
+            }
+            voicePlayer.play(position);
+
+
         }
     }
 
-    private void playVoice(int position) {
-
-        if (mediaPlayer != null && !isPlaying) {
-            mediaPlayer = null;
-            seekBar = null;
-        }
-        File file = new File(mChatMessageList.get(position).getVoiceMailUri());
-        mediaPlayer = MediaPlayer.create(this, Uri.fromFile(file));
-        mediaPlayer.start();
-
-        seekBar = layoutManager.findViewByPosition(position).findViewById(R.id.userVoiceSeekBar);
-        seekBar.setTag(position);
-
-        Log.i(TAG, "playVoice: seekbar tag" + seekBar.getTag().toString());
-        final View root = layoutManager.findViewByPosition(position).getRootView();
-
-        final TextView textView1 = root.findViewById(R.id.userVoiceDuration);
-        seekBar.setMax(mediaPlayer.getDuration());
-
-        //TIMER FOR CONTROL SEEKBAR
-        Timer timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                if (mediaPlayer!=null){
-                    seekBar.setProgress(mediaPlayer.getCurrentPosition());
-                    textView1.setText(String.valueOf(mediaPlayer.getCurrentPosition()));
-                }
-            }
-        }, 0, 1000);
-
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                mediaPlayer.seekTo(progress);
-                textView1.setText(String.valueOf(mediaPlayer.getCurrentPosition()));
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                mediaPlayer.pause();
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                mediaPlayer.start();
-            }
-        });
-    }
-
-
-    @SuppressLint("ClickableViewAccessibility")
     @Override
     public void onClick(View v) {
         if (v.getId() == R.id.floatingActionButton && !messageEdit.getText().toString().isEmpty()) {
@@ -368,32 +333,46 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
     @Override
     public boolean onTouch(View v, MotionEvent event) {
         SimpleDateFormat format = new SimpleDateFormat("mm:ss", Locale.getDefault());
-
-        boolean downTouch = false;
         if (v.getId() == R.id.floatingActionButton && messageEdit.getText().toString().isEmpty()) {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                     //Start Record
                     timePressed = System.currentTimeMillis();
-                    recordAudio();
+                    timeStopped = System.currentTimeMillis();
+                    duration = 0;
+                    emojiImage.setVisibility(View.GONE);
+                    messageEdit.setVisibility(View.GONE);
+                    voiceMicImage.setVisibility(View.VISIBLE);
+                    voiceTextTime.setVisibility(View.VISIBLE);
+                    camImage.setVisibility(View.GONE);
+                    attachImage.setVisibility(View.GONE);
                     sendButton.animate().scaleX(1.6f).scaleY(1.6f).setDuration(100).start();
-//                    downTouch = true;
+                    recordAudio();
+//                    startTimer();
                     return true;
 
                 case MotionEvent.ACTION_UP:
-//                    if (!downTouch) {
-//                        v.performClick();
-//                    } else {
                     //Stop Record
                     sendButton.animate().scaleX(1f).scaleY(1f).setDuration(100).start();
+                    emojiImage.setVisibility(View.VISIBLE);
+                    messageEdit.setVisibility(View.VISIBLE);
+                    camImage.setVisibility(View.VISIBLE);
+                    attachImage.setVisibility(View.VISIBLE);
+                    voiceMicImage.setVisibility(View.GONE);
+                    voiceTextTime.setVisibility(View.GONE);
+
                     timeStopped = System.currentTimeMillis();
-                    long duration = timeStopped - timePressed;
+                    duration = timeStopped - timePressed;
                     voiceDuration = voiceFormat.format(duration);
-                    if (recorder != null) {
+                    if (duration > MINIMUM_VOICE_CLIP_DURATION) {
+                        Log.i(TAG, "onTouch: duration" + voiceFormat.format(duration));
                         stopAudioRecord();
                         sendMessage(VOICE_MESSAGE);
+                    } else {
+                        Log.i(TAG, "delete called: " + duration);
+                        File file = new File(voiceFile);
+//                        file.delete();
                     }
-//                    }
                     return true;
                 default:
                     break;
@@ -403,24 +382,33 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
     }
 
     private void stopAudioRecord() {
-        recorder.stop();
-        recorder.release();
-        recorder = null;
-        System.out.println("PATH: " + fileName.toString());
+        if (timer != null) {
+            timer.cancel();
+            timer = null;
+        }
+        if (recorder != null) {
+            try {
+                recorder.stop();
+                recorder.release();
+                recorder = null;
+            } catch (Exception e) {
+                Log.i(TAG, "stopAudioRecord: not Recording");
+            }
 
+        }
     }
 
     public void recordAudio() {
         // Record to the external cache directory for visibility
-        SimpleDateFormat sdf = new SimpleDateFormat("YYYYMMddss");
-        fileName = getExternalCacheDir().getAbsolutePath();
-        fileName += "/PTT-" + sdf.format(System.currentTimeMillis()) + ".3gp";
+        final SimpleDateFormat sdf = new SimpleDateFormat("YYYYMMddss");
+        voiceFile = getExternalCacheDir().getAbsolutePath();
+        voiceFile += "/PTT-" + sdf.format(System.currentTimeMillis()) + ".3gp";
 
         if (checkPermissions(Manifest.permission.RECORD_AUDIO)) {
             recorder = new MediaRecorder();
             recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
             recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-            recorder.setOutputFile(fileName);
+            recorder.setOutputFile(voiceFile);
             recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
 
             try {
@@ -428,9 +416,34 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            MediaPlayer mp = MediaPlayer.create(this, R.raw.bow);
+            mp.start();
+            startTimer();
+            timePressed = System.currentTimeMillis();
             recorder.start();
         }
     }
+
+    private void startTimer() {
+
+        voiceTextTime.setText("00:00");
+        timeCounter = 0;
+        timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                if (voiceMicImage.getAlpha() == 0f) {
+                    voiceMicImage.setAlpha(1f);
+                } else {
+                    voiceMicImage.setAlpha(0f);
+                }
+                voiceTextTime.setText(voiceFormat.format(timeCounter));
+                timeCounter += 500;
+            }
+        }, 500, 500);
+
+    }
+
 
     public boolean checkPermissions(String permission) {
         if (ContextCompat.checkSelfPermission(ChatActivity.this, permission) == PackageManager.PERMISSION_GRANTED) {
@@ -465,4 +478,61 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
 
         }
     }
+
+
+    public void play(final int position) {
+
+        File file = new File(mChatMessageList.get(position).getVoiceMailUri());
+        mediaPlayer = MediaPlayer.create(this, Uri.fromFile(file));
+        mediaPlayer.start();
+        isPlaying = true;
+
+        seekBar = layoutManager.findViewByPosition(position).findViewById(R.id.userVoiceSeekBar);
+        voiceDurationText = layoutManager.findViewByPosition(position).findViewById(R.id.userVoiceDuration);
+        seekBar.setTag(position);
+        Log.i(TAG, "play: seekbar tag" + seekBar.getTag().toString());
+        seekBar.setMax(mediaPlayer.getDuration());
+
+        final Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        voiceDurationText.setText(voiceFormat.format(mediaPlayer.getCurrentPosition()));
+//                        seekBar.setProgress(mediaPlayer.getCurrentPosition());
+                    }
+                });
+
+            }
+        }, 200, 250);
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                timer.cancel();
+                seekBar.setProgress(0);
+            }
+        });
+
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                mediaPlayer.seekTo(progress);
+
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekBar) {
+                mediaPlayer.pause();
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+                mediaPlayer.start();
+            }
+        });
+    }
+
 }

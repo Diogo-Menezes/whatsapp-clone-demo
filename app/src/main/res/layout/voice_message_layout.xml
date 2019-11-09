@@ -2,9 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
     <RelativeLayout
+        tools:visibility="visible"
         android:visibility="gone"
         android:id="@+id/userVoiceMessageLayout"
         style="@style/mainMessageLayout"
@@ -30,14 +32,14 @@
             android:src="@drawable/ic_mic"
             android:tint="@color/iconGray" />
 
-        <ImageButton
+        <ImageView
             android:id="@+id/playUserAudio"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="25dp"
+            android:layout_height="30dp"
             android:layout_centerVertical="true"
             android:layout_marginStart="8dp"
             android:layout_toEndOf="@id/userImage"
-            android:background="@null"
+            android:background="?selectableItemBackgroundBorderless"
             android:onClick="playUserAudio"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_play" />
@@ -96,13 +98,13 @@
             android:src="@drawable/ic_mic"
             android:tint="@android:color/holo_blue_light" />
 
-        <ImageButton
+        <ImageView
             android:id="@+id/playFriendAudio"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="25dp"
+            android:layout_height="30dp"
             android:layout_centerVertical="true"
             android:layout_marginStart="10dp"
-            android:background="@null"
+            android:background="?selectableItemBackgroundBorderless"
             android:onClick="playFriendAudio"
             android:scaleType="centerCrop"
             android:src="@drawable/ic_play" />

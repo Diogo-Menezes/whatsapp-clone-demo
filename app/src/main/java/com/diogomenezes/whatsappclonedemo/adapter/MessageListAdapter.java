@@ -1,34 +1,31 @@
 package com.diogomenezes.whatsappclonedemo.adapter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.diogomenezes.whatsappclonedemo.ChatActivity;
 import com.diogomenezes.whatsappclonedemo.R;
 import com.diogomenezes.whatsappclonedemo.models.Message;
+import com.diogomenezes.whatsappclonedemo.util.VoicePlayer;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static com.diogomenezes.whatsappclonedemo.ChatActivity.FROM_FRIEND;
 import static com.diogomenezes.whatsappclonedemo.ChatActivity.FROM_USER;
 import static com.diogomenezes.whatsappclonedemo.models.Message.IMAGE_MESSAGE;
 import static com.diogomenezes.whatsappclonedemo.models.Message.TEXT_MESSAGE;
@@ -53,7 +50,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
         this.mMessageClick = mMessageClick;
     }
 
-    class MessageViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener, View.OnClickListener {
+    class MessageViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener, View.OnClickListener, SeekBar.OnSeekBarChangeListener {
         //TEXT_MESSAGE
         private TextView userMessageContent, userMesssageTime, friendMessageContent, friendMessageTime;
         private LinearLayout userMessageLayout, friendMessageLayout;
@@ -63,7 +60,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
         private CircleImageView userImage, friendImage;
         private MessageLongClick messageClick;
         private PlayButtonClicked playButtonClicked;
-        private ImageButton friendPlayButton, userPlayButton;
+        private ImageView friendPlayButton, userPlayButton;
         private TextView friendVoiceDuration, userVoiceDuration, userVoiceDate, friendVoiceDate;
         private SeekBar userSeekBar, friendSeekbar;
 
@@ -98,6 +95,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
             userPlayButton.setOnClickListener(this);
             friendPlayButton.setOnClickListener(this);
             itemView.setOnLongClickListener(this);
+            userSeekBar.setOnSeekBarChangeListener(this);
 
         }
 
@@ -109,14 +107,24 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
 
         @Override
         public void onClick(View v) {
-            if (v.getId() == userPlayButton.getId()) {
-                Toast.makeText(context, "Play user", Toast.LENGTH_SHORT).show();
+            if (v.getId() == userPlayButton.getId() || v.getId() == friendPlayButton.getId()) {
                 messageClick.messageLongClicked(getAdapterPosition());
             }
-            if (v.getId() == friendPlayButton.getId()) {
-                Toast.makeText(context, "Play friend", Toast.LENGTH_SHORT).show();
-                messageClick.messageLongClicked(getAdapterPosition());
-            }
+        }
+
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+
         }
     }
 
@@ -138,8 +146,7 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
                     holder.friendMessageLayout.setVisibility(View.GONE);
                     holder.userMessageContent.setText(mChatMessageList.get(position).getMessage());
                     holder.userMesssageTime.setText(mChatMessageList.get(position).getTime());
-                }
-                if (mChatMessageList.get(position).getFrom() == FROM_FRIEND) {
+                } else {
                     holder.userMessageLayout.setVisibility(View.GONE);
                     holder.friendMessageContent.setText(mChatMessageList.get(position).getMessage());
                     holder.friendMessageTime.setText(mChatMessageList.get(position).getTime());
@@ -152,17 +159,17 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
                     holder.userVoiceLayout.setVisibility(View.VISIBLE);
                     holder.userVoiceDuration.setText(mChatMessageList.get(position).getVoiceMailDuration());
                     holder.userVoiceDate.setText(mChatMessageList.get(position).getTime());
+                    holder.userSeekBar.setTag(position);
 //                    holder.userImage.setImageBitmap(mChatMessageList.get(position).getBitmap());
-                }
-                if (mChatMessageList.get(position).getFrom() == FROM_FRIEND) {
+                } else {
                     holder.friendMessageLayout.setVisibility(View.GONE);
                     holder.userMessageLayout.setVisibility(View.GONE);
                     holder.friendVoiceLayout.setVisibility(View.VISIBLE);
                     holder.friendVoiceDuration.setText(mChatMessageList.get(position).getVoiceMailDuration());
                     holder.friendVoiceDuration.setText(mChatMessageList.get(position).getTime());
+                    holder.userSeekBar.setTag(position);
 //                    holder.friendImage.setImageBitmap(mChatMessageList.get(position).getBitmap());
                 }
-
                 break;
             case VIDEO_MESSAGE:
                 break;
@@ -188,7 +195,4 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
         return position;
     }
 
-    public void playVoice(int position, final SeekBar seekBar, TextView voiceDuration) {
-
-    }
 }
