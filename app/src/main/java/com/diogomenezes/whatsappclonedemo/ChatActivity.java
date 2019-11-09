@@ -118,15 +118,26 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
 //        getSupportActionBar().hide();
         Toolbar toolbar = (androidx.appcompat.widget.Toolbar) findViewById(R.id.toolbar_chat_title);
         setSupportActionBar(toolbar);
-        if (toolbar != null) {
-            //Do something
-        }
         Intent intent = getIntent();
-        if (intent != null) {
-            setTitle(intent.getStringExtra(FRIEND_NAME));
+
+        if (toolbar != null) {
+            TextView textView = findViewById(R.id.toolbar_chat_name);
+            ImageView imageView = findViewById(R.id.toolbar_chat_contactImage);
+            if (intent != null) {
+                textView.setText(intent.getStringExtra(FRIEND_NAME));
+//                imageView.setImageDrawable();
+            }
         }
 
-        fakeMessages();
+
+        Handler handler = new Handler();
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                fakeMessages();
+            }
+        };
+        handler.postDelayed(runnable, 50);
         activateListeners();
     }
 
@@ -256,7 +267,7 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
 
         }
         messageAdapter.notifyDataSetChanged();
-        mRecyclerView.smoothScrollToPosition(mChatMessageList.size());
+        mRecyclerView.scrollToPosition(mChatMessageList.size());
     }
 
 
@@ -348,6 +359,9 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
                     attachImage.setVisibility(View.GONE);
                     sendButton.animate().scaleX(1.6f).scaleY(1.6f).setDuration(100).start();
                     recordAudio();
+                    if (voicePlayer != null) {
+                        voicePlayer.stop();
+                    }
 //                    startTimer();
                     return true;
 

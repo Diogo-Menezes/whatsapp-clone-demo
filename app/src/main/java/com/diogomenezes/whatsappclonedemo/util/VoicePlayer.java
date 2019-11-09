@@ -80,12 +80,12 @@ public class VoicePlayer implements MediaPlayer.OnCompletionListener, SeekBar.On
                 if (position != oldPosition) {
                     Log.i(TAG, "iscreated called different position");
                     if (mediaPlayer.isPlaying()) {
-                        seekBar.setProgress(0);
                         timer.cancel();
                         playButton.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_play));
                         mediaPlayer.seekTo(0);
                         mediaPlayer.pause();
                     }
+                    seekBar.setProgress(0);
                     createPlayer(position);
                 }
             }
@@ -111,6 +111,7 @@ public class VoicePlayer implements MediaPlayer.OnCompletionListener, SeekBar.On
         playButton = layoutManager.findViewByPosition(filePosition).findViewById(R.id.playUserAudio);
         seekBar.setTag(filePosition);
         seekBar.setMax(mediaPlayer.getDuration());
+        seekBar.setProgress(0);
         playButton.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_pause));
         createTimer();
         mediaPlayer.setOnCompletionListener(this);
@@ -133,6 +134,7 @@ public class VoicePlayer implements MediaPlayer.OnCompletionListener, SeekBar.On
                         if (mediaPlayer == null) {
                             timer.cancel();
                         } else {
+                            seekBar.setProgress(mediaPlayer.getCurrentPosition());
                             textView.setText(sdf.format(mediaPlayer.getCurrentPosition()));
                         }
 
@@ -140,10 +142,30 @@ public class VoicePlayer implements MediaPlayer.OnCompletionListener, SeekBar.On
                 });
 
             }
-        }, 200, 250);
+        }, 0, 100);
     }
 
+    public void stop() {
+        Runnable runnable = new Runnable() {
+            @Override
+            public void run() {
+                Log.i(TAG, "run: called");
+                if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+                    timer.cancel();
+                    playButton.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_play));
+                    textView.setText(sdf.format(mediaPlayer.getDuration()));
+                    mediaPlayer.release();
+                    mediaPlayer = null;
+                    isCreated = false;
+                    isPaused = false;
+                    seekBar = null;
 
+                }
+            }
+        };
+
+        runnable.run();
+    }
 
 
     @Override

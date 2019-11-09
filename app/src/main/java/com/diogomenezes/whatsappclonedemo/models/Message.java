@@ -9,6 +9,8 @@ public class Message {
     public static final int IMAGE_MESSAGE = 2;
     public static final int VIDEO_MESSAGE = 3;
 
+
+    private int id;
     private String message;
     private String time;
     private int from;

@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     tools:context=".ChatActivity">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -13,15 +14,17 @@
         android:layout_height="?attr/actionBarSize"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginStart="-30dp">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar_chat_title"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-            app:popupTheme="@style/Theme.AppCompat.Light"/>
+            app:popupTheme="@style/Theme.AppCompat.Light">
+            <include layout="@layout/chat_toolbar" />
+        </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
     <ImageView
@@ -93,9 +96,9 @@
             android:layout_height="30dp"
             android:layout_gravity="center|bottom"
             android:layout_margin="6dp"
+            android:background="?selectableItemBackgroundBorderless"
             android:clickable="true"
-            android:src="@drawable/ic_insert_emoticon"
-            android:background="?selectableItemBackgroundBorderless"/>
+            android:src="@drawable/ic_insert_emoticon" />
 
         <TextView
             android:id="@+id/voiceTextTime"
@@ -126,10 +129,10 @@
             android:layout_height="30dp"
             android:layout_gravity="center|bottom"
             android:layout_margin="6dp"
-            android:src="@drawable/ic_attach"
-            android:clickable="true"
             android:background="?selectableItemBackgroundBorderless"
-            android:focusable="true" />
+            android:clickable="true"
+            android:focusable="true"
+            android:src="@drawable/ic_attach" />
 
         <View
             android:layout_width="0dp"
@@ -142,11 +145,11 @@
             android:layout_height="30dp"
             android:layout_gravity="center|bottom"
             android:layout_margin="6dp"
-            android:paddingStart="4dp"
-            android:src="@drawable/ic_cam"
-            android:clickable="true"
             android:background="?selectableItemBackgroundBorderless"
-            android:focusable="true" />
+            android:clickable="true"
+            android:focusable="true"
+            android:paddingStart="4dp"
+            android:src="@drawable/ic_cam" />
 
     </LinearLayout>
 
