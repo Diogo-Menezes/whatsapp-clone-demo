@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.diogomenezes.whatsappclonedemo.ui.contactList.FriendListActivity;
+import com.diogomenezes.whatsappclonedemo.ui.contactList.MainActivity;
 import com.diogomenezes.whatsappclonedemo.R;
 import com.parse.LogInCallback;
 import com.parse.ParseAnonymousUtils;
@@ -51,7 +51,7 @@ public class ParseLoginActivity extends AppCompatActivity {
     }
 
     private void redirect() {
-        startActivity(new Intent(this, FriendListActivity.class));
+        startActivity(new Intent(this, MainActivity.class));
         finish();
 
     }

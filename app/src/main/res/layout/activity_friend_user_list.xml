@@ -3,10 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.contactList.FriendListActivity">
+    tools:context=".ui.contactList.MainActivity">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/userListRecView"
+        android:id="@+id/contact_list_recView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:clipToPadding="false"

@@ -1,4 +1,4 @@
-package com.diogomenezes.whatsappclonedemo.adapter;
+package com.diogomenezes.whatsappclonedemo.ui.chat.adapter;
 
 import android.content.Context;
 import android.media.MediaPlayer;

@@ -4,4 +4,7 @@
     <string name="agree_and_continue">Agree and Continue</string>
     <string name="welcome_to_whatsapp">Welcome to WhatsApp</string>
     <string name="title_activity_main2">Main2Activity</string>
+    <string name="title_activity_main3">Main3Activity</string>
+    <string name="tab_text_1">Tab 1</string>
+    <string name="tab_text_2">Tab 2</string>
 </resources>

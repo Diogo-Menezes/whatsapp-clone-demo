@@ -34,7 +34,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.diogomenezes.whatsappclonedemo.R;
-import com.diogomenezes.whatsappclonedemo.adapter.MessageListAdapter;
+import com.diogomenezes.whatsappclonedemo.ui.chat.adapter.MessageListAdapter;
 import com.diogomenezes.whatsappclonedemo.database.MessageRepository;
 import com.diogomenezes.whatsappclonedemo.models.Message;
 import com.diogomenezes.whatsappclonedemo.util.VoicePlayer;
@@ -48,13 +48,13 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static com.diogomenezes.whatsappclonedemo.ui.contactList.FriendListActivity.FRIEND_ID;
-import static com.diogomenezes.whatsappclonedemo.ui.contactList.FriendListActivity.FRIEND_IMAGE;
 import static com.diogomenezes.whatsappclonedemo.models.Message.IMAGE_MESSAGE;
 import static com.diogomenezes.whatsappclonedemo.models.Message.TEXT_MESSAGE;
 import static com.diogomenezes.whatsappclonedemo.models.Message.VIDEO_MESSAGE;
 import static com.diogomenezes.whatsappclonedemo.models.Message.VOICE_MESSAGE;
-import static com.diogomenezes.whatsappclonedemo.parse_Activities.ParseChatActivity.FRIEND_NAME;
+import static com.diogomenezes.whatsappclonedemo.ui.contactList.MainActivity.FRIEND_ID;
+import static com.diogomenezes.whatsappclonedemo.ui.contactList.MainActivity.FRIEND_IMAGE;
+import static com.diogomenezes.whatsappclonedemo.ui.contactList.MainActivity.FRIEND_NAME;
 
 public class ChatActivity extends AppCompatActivity implements MessageListAdapter.MessageClick, MessageListAdapter.MessageLongClick, View.OnClickListener, View.OnTouchListener {
     private static final String TAG = "NewChatActivity";
@@ -127,6 +127,7 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
             TextView textView = findViewById(R.id.toolbar_chat_name);
             ImageView imageView = findViewById(R.id.toolbar_chat_contactImage);
             if (intent != null) {
+                Log.d(TAG, "onCreate: " + intent.getStringExtra(FRIEND_IMAGE));
                 friendID = intent.getIntExtra(FRIEND_ID, -1);
                 textView.setText(intent.getStringExtra(FRIEND_NAME));
                 friendImageUri = intent.getStringExtra(FRIEND_IMAGE);

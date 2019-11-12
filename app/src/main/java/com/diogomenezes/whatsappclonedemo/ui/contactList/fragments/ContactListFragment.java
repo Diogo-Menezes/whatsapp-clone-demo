@@ -2,12 +2,10 @@ package com.diogomenezes.whatsappclonedemo.ui.contactList.fragments;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -17,25 +15,25 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.diogomenezes.whatsappclonedemo.R;
-import com.diogomenezes.whatsappclonedemo.adapter.ChatListAdapter;
+import com.diogomenezes.whatsappclonedemo.ui.contactList.adapter.ContactListAdapter;
 import com.diogomenezes.whatsappclonedemo.models.ContactList;
 import com.diogomenezes.whatsappclonedemo.ui.chat.ChatActivity;
-import com.diogomenezes.whatsappclonedemo.ui.contactList.FriendListActivity;
 import com.diogomenezes.whatsappclonedemo.ui.contactList.ImageClickDialog;
 
 import java.util.ArrayList;
 
-import static com.diogomenezes.whatsappclonedemo.parse_Activities.ParseChatActivity.FRIEND_NAME;
-import static com.diogomenezes.whatsappclonedemo.ui.contactList.FriendListActivity.FRIEND_ID;
-import static com.diogomenezes.whatsappclonedemo.ui.contactList.FriendListActivity.FRIEND_IMAGE;
+import static com.diogomenezes.whatsappclonedemo.ui.contactList.MainActivity.FRIEND_ID;
+import static com.diogomenezes.whatsappclonedemo.ui.contactList.MainActivity.FRIEND_IMAGE;
+import static com.diogomenezes.whatsappclonedemo.ui.contactList.MainActivity.FRIEND_NAME;
 
-public class ContactListFragment extends Fragment implements ChatListAdapter.ContactClick, ChatListAdapter.OnImageClick {
+public class ContactListFragment extends Fragment implements ContactListAdapter.ContactClick, ContactListAdapter.OnImageClick {
+    private static final String TAG = "ContactListFragment";
 
     //UI
     private RecyclerView recyclerView;
 
     //VARS
-    private ChatListAdapter adapter;
+    private ContactListAdapter adapter;
     private ArrayList<ContactList> mChatList;
     private ContactList mChat;
     private Bitmap bitmap;
@@ -60,12 +58,12 @@ public class ContactListFragment extends Fragment implements ChatListAdapter.Con
     }
 
     private void init(View view) {
-        recyclerView = view.findViewById(R.id.userListRecView);
+        recyclerView = view.findViewById(R.id.contact_list_recView);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
         addFakeUsers();
 
-        adapter = new ChatListAdapter(mChatList, this, this);
+        adapter = new ContactListAdapter(mChatList, this, this);
         recyclerView.setAdapter(adapter);
 
     }
@@ -74,18 +72,20 @@ public class ContactListFragment extends Fragment implements ChatListAdapter.Con
     @Override
     public void contactImageClick(int position) {
         contactPosition = position;
-        dialogFragment = new ImageClickDialog(mChatList.get(position).getContactName(), friendImagesUri.get(position));
-        dialogFragment.show(getChildFragmentManager(),"contactDialog");
+        dialogFragment = new ImageClickDialog(mChatList.get(position).getContactName(), friendImagesUri.get(position),userId.get(position),position);
+        if (getActivity()!=null){
+            dialogFragment.show(getActivity().getSupportFragmentManager(), "contactDialog");
+        }
+
     }
 
     @Override
     public void contactClick(int position) {
-//        Intent intent = new Intent(FriendListActivity.class, ChatActivity.class);
-//        intent.putExtra(FRIEND_NAME, mChatList.get(position).getContactName());
-//        intent.putExtra(FRIEND_ID, userId.get(position));
-//        intent.putExtra(FRIEND_IMAGE, friendImagesUri.get(position));
-//        startActivity(intent);
-
+        Intent intent = new Intent(getActivity(), ChatActivity.class);
+        intent.putExtra(FRIEND_NAME, mChatList.get(position).getContactName());
+        intent.putExtra(FRIEND_ID, userId.get(position));
+        intent.putExtra(FRIEND_IMAGE, friendImagesUri.get(position));
+        startActivity(intent);
     }
 
     private void addFakeUsers() {
@@ -117,10 +117,9 @@ public class ContactListFragment extends Fragment implements ChatListAdapter.Con
         friendImagesUri.add("https://images.pexels.com/photos/1787303/pexels-photo-1787303.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500");
         friendImagesUri.add("https://images.pexels.com/photos/2777429/pexels-photo-2777429.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500");
 
-        BitmapFactory.Options options = new BitmapFactory.Options();
-        options.inScaled = false;
-        final Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.random_contact_picture, options);
-
+//        BitmapFactory.Options options = new BitmapFactory.Options();
+//        options.inScaled = false;
+//        final Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.random_contact_picture, options);
 
         mChatList = new ArrayList<>();
         for (int i = 0; i < mNames.length; i++) {
@@ -128,25 +127,5 @@ public class ContactListFragment extends Fragment implements ChatListAdapter.Con
             mChat = new ContactList(mNames[i], messages[i], "Yesterday", "", friendImagesUri.get(i));
             mChatList.add(mChat);
         }
-    }
-
-    public void videoClick(View view) {
-        Toast.makeText(view.getContext(), "VideoCall", Toast.LENGTH_SHORT).show();
-        dialogFragment.dismiss();
-    }
-
-    public void phoneClick(View view) {
-        Toast.makeText(view.getContext(), "Call", Toast.LENGTH_SHORT).show();
-        dialogFragment.dismiss();
-    }
-
-    public void messageClick(View view) {
-        contactClick(contactPosition);
-        dialogFragment.dismiss();
-    }
-
-    public void contactInfoClick(View view) {
-        Toast.makeText(view.getContext(), "Contact Info", Toast.LENGTH_SHORT).show();
-        dialogFragment.dismiss();
     }
 }

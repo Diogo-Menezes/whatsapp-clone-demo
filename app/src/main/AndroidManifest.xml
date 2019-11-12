@@ -4,9 +4,9 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:name=".App"
@@ -15,11 +15,12 @@
         android:label="@string/app_name"
         android:roundIcon="@drawable/whatsapp_logo"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
-        <activity android:name=".ui.chat.ChatActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
-        <activity android:name=".ui.contactList.FriendListActivity" />
-        <activity android:name=".ui.FirstScreen" />
+        android:theme="@style/BaseTheme">
+        <activity
+            android:name=".ui.chat.ChatActivity"
+            android:theme="@style/BaseTheme.NoActionBar" />
+        <activity android:name=".ui.contactList.MainActivity" />
+        <activity android:name=".FirstScreen" />
         <activity android:name=".parse_Activities.ParseUserListActivity" />
         <activity android:name=".parse_Activities.ParseChatActivity" />
         <activity android:name=".parse_Activities.ParseLoginActivity">
