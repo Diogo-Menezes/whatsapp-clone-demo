@@ -8,7 +8,7 @@ import androidx.room.RoomDatabase;
 
 import com.diogomenezes.whatsappclonedemo.models.Message;
 
-@Database(entities = {Message.class}, version = 1)
+@Database(entities = {Message.class}, version = 2,exportSchema = false)
 public abstract class MessageDatabase extends RoomDatabase {
 
     public abstract MessageDao messageDao();
@@ -21,6 +21,7 @@ public abstract class MessageDatabase extends RoomDatabase {
             instance = Room.databaseBuilder(
                     context.getApplicationContext(), MessageDatabase.class, DATABASE_NAME)
                     .fallbackToDestructiveMigration()
+                    .allowMainThreadQueries()
                     .build();
 
         }

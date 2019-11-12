@@ -1,4 +1,4 @@
-package com.diogomenezes.whatsappclonedemo;
+package com.diogomenezes.whatsappclonedemo.ui.chat;
 
 import android.Manifest;
 import android.content.Context;
@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
 import android.media.MediaRecorder;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
@@ -33,7 +32,10 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+import com.diogomenezes.whatsappclonedemo.R;
 import com.diogomenezes.whatsappclonedemo.adapter.MessageListAdapter;
+import com.diogomenezes.whatsappclonedemo.database.MessageRepository;
 import com.diogomenezes.whatsappclonedemo.models.Message;
 import com.diogomenezes.whatsappclonedemo.util.VoicePlayer;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -43,22 +45,23 @@ import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Locale;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static com.diogomenezes.whatsappclonedemo.ui.contactList.FriendListActivity.FRIEND_ID;
+import static com.diogomenezes.whatsappclonedemo.ui.contactList.FriendListActivity.FRIEND_IMAGE;
 import static com.diogomenezes.whatsappclonedemo.models.Message.IMAGE_MESSAGE;
 import static com.diogomenezes.whatsappclonedemo.models.Message.TEXT_MESSAGE;
 import static com.diogomenezes.whatsappclonedemo.models.Message.VIDEO_MESSAGE;
 import static com.diogomenezes.whatsappclonedemo.models.Message.VOICE_MESSAGE;
 import static com.diogomenezes.whatsappclonedemo.parse_Activities.ParseChatActivity.FRIEND_NAME;
 
-public class ChatActivity extends AppCompatActivity implements MessageListAdapter.MessageLongClick, View.OnClickListener, View.OnTouchListener {
+public class ChatActivity extends AppCompatActivity implements MessageListAdapter.MessageClick, MessageListAdapter.MessageLongClick, View.OnClickListener, View.OnTouchListener {
     private static final String TAG = "NewChatActivity";
     public static final int FROM_FRIEND = 0;
-    public static final int FROM_USER = 1;
+    public static final int FROM_USER = 100;
     private static final int REQUEST_RECORD_AUDIO_PERMISSION = 123;
-    private static final long MINIMUM_VOICE_CLIP_DURATION = 900;
+    private static final long MINIMUM_VOICE_CLIP_DURATION = 900;    //900 Milliseconds
 
     //UI
     private RecyclerView mRecyclerView;
@@ -84,14 +87,19 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
     private int layoutManagerLastPosition;
     private long timePressed, timeStopped, duration, timeCounter;
     private MediaRecorder recorder;
-    private String voiceFile, voiceDuration;
+    private String voiceFileUri, voiceDuration;
     private Message mMessage;
     private MediaPlayer mediaPlayer;
     private boolean isPlaying = false;
     private SeekBar seekBar;
     private Timer timer;
+    private int friendID;
+    private String friendImageUri;
+    private MessageRepository repository;
 
-    private
+    // TODO: 11/11/2019 change to real userID and Imagelocation
+    private int userID = 100;
+    private String userImageUri = "https://images.unsplash.com/photo-1453396450673-3fe83d2db2c4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=334&q=80";
 
     @Override
 
@@ -109,16 +117,9 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
         attachImage = findViewById(R.id.attachImage);
         camImage = findViewById(R.id.camImage);
         layoutManager = new LinearLayoutManager(this, RecyclerView.VERTICAL, false);
-        mRecyclerView = findViewById(R.id.chatRecView);
-        mRecyclerView.setLayoutManager(layoutManager);
-        messageAdapter = new MessageListAdapter(mChatMessageList, this);
-        mRecyclerView.setAdapter(messageAdapter);
-        mRecyclerView.setHasFixedSize(true);
-        activateTextWatcher();
-        sendButton.setOnClickListener(this);
-        sendButton.setOnTouchListener(this);
-//        getSupportActionBar().hide();
-        Toolbar toolbar = (androidx.appcompat.widget.Toolbar) findViewById(R.id.toolbar_chat_title);
+
+
+        Toolbar toolbar = findViewById(R.id.toolbar_chat_title);
         setSupportActionBar(toolbar);
         Intent intent = getIntent();
 
@@ -126,21 +127,40 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
             TextView textView = findViewById(R.id.toolbar_chat_name);
             ImageView imageView = findViewById(R.id.toolbar_chat_contactImage);
             if (intent != null) {
+                friendID = intent.getIntExtra(FRIEND_ID, -1);
                 textView.setText(intent.getStringExtra(FRIEND_NAME));
-//                imageView.setImageDrawable();
+                friendImageUri = intent.getStringExtra(FRIEND_IMAGE);
+                Glide.with(this).load(friendImageUri).into(imageView);
+
             }
         }
-
+        mRecyclerView = findViewById(R.id.chatRecView);
+        mRecyclerView.setLayoutManager(layoutManager);
+        messageAdapter = new MessageListAdapter(mChatMessageList, this, this, userImageUri, friendImageUri);
+        mRecyclerView.setAdapter(messageAdapter);
+        mRecyclerView.setHasFixedSize(true);
+        activateTextWatcher();
+        sendButton.setOnClickListener(this);
+        sendButton.setOnTouchListener(this);
 
         Handler handler = new Handler();
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                fakeMessages();
+                getMessages();
+//                fakeMessages();
             }
         };
-        handler.postDelayed(runnable, 50);
+        handler.postDelayed(runnable, 0);
         activateListeners();
+    }
+
+    private void getMessages() {
+        mChatMessageList.clear();
+        repository = new MessageRepository(getApplication());
+        mChatMessageList.addAll(repository.getAll(FROM_USER, friendID));
+        messageAdapter.notifyDataSetChanged();
+        mRecyclerView.smoothScrollToPosition(mChatMessageList.size());
     }
 
 
@@ -206,33 +226,43 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
     public void sendMessage(int type) {
         position = 0;
         String time = timeFormat.format(System.currentTimeMillis());
-
+        repository = new MessageRepository(getApplication());
 
         switch (type) {
             case TEXT_MESSAGE:
                 if (!messageEdit.getText().toString().isEmpty()) {
-                    mMessage = new Message(TEXT_MESSAGE, messageEdit.getText().toString(), time, FROM_USER);
+                    mMessage = new Message();
+                    mMessage.setType(TEXT_MESSAGE);
+                    mMessage.setMessage(messageEdit.getText().toString());
                     messageEdit.setText("");
                 }
                 break;
             case VOICE_MESSAGE:
-                mMessage = new Message(VOICE_MESSAGE, time, voiceFile, voiceDuration, FROM_USER);
+                mMessage = new Message();
+                mMessage.setType(VOICE_MESSAGE);
+                mMessage.setVoiceMailUri(voiceFileUri);
+                mMessage.setVoiceMailDuration(voiceDuration);
                 break;
             case VIDEO_MESSAGE:
                 //check for text
-                mMessage = new Message(VIDEO_MESSAGE, voiceFile, time, FROM_USER);
+//                mMessage = new Message(VIDEO_MESSAGE, voiceFileUri, time, FROM_USER);
                 break;
             case IMAGE_MESSAGE:
                 //check for text
-                mMessage = new Message(IMAGE_MESSAGE, voiceFile, time, FROM_USER);
+//                mMessage = new Message(IMAGE_MESSAGE, voiceFileUri, time, FROM_USER);
                 break;
         }
 
         if (mMessage != null) {
+            mMessage.setTime(time);
+            mMessage.setDate(System.currentTimeMillis());
+            mMessage.setFrom(FROM_USER);
+            mMessage.setTo(friendID);
+            repository.insert(mMessage);
             mChatMessageList.add(mMessage);
             position = mChatMessageList.size();
             messageAdapter.notifyItemInserted(position);
-
+            mMessage = null;
             Handler handler = new Handler();
             handler.postDelayed(new Runnable() {
                 @Override
@@ -250,6 +280,7 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
     }
 
     private void fakeMessages() {
+
         String[] messages = {"Inceptos volutpat nonummy. Condimentum tempus ac tortor accumsan non aenean.",
                 "Volutpat sit duis. Varius. Posuere urna taciti convallis senectus praesent.",
                 "Arcu a odio magna Gravida porttitor ullamcorper. Enim, at netus.",
@@ -263,8 +294,9 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
         String[] messagesTime = {"00:10", "00:11", "00:12", "00:13", "00:15", "00:16", "00:18", "00:18", "00:19", "00:19"};
         Integer[] from = {0, 1, 0, 1, 0, 1, 0, 1, 0, 0};
 
+
         for (int i = 0; i < messages.length; i++) {
-            mChatMessage = new Message(TEXT_MESSAGE, messages[i], messagesTime[i], from[i]);
+//            mChatMessage = new Message(TEXT_MESSAGE, messages[i], messagesTime[i], from[i]);
             mChatMessageList.add(mChatMessage);
 
         }
@@ -305,11 +337,13 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
 
                 break;
             case R.id.chat_menu_action_background:
-
                 break;
-//            case R.id.chat_menu_action_more:
-//
-//                break;
+            case R.id.chat_menu_action_clean_chat:
+                repository = new MessageRepository(getApplication());
+                repository.deleteAll();
+                mChatMessageList.clear();
+                messageAdapter.notifyDataSetChanged();
+                break;
 
             default:
                 return super.onOptionsItemSelected(item);
@@ -324,9 +358,10 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
     }
 
     @Override
-    public void messageLongClicked(int position) {
+    public void messageClicked(int position) {
         if (mChatMessageList.get(position).getType() == VOICE_MESSAGE) {
             if (voicePlayer == null) {
+
                 voicePlayer = new VoicePlayer(this, mChatMessageList, layoutManager);
             }
             voicePlayer.play(position);
@@ -345,7 +380,7 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
-        SimpleDateFormat format = new SimpleDateFormat("mm:ss", Locale.getDefault());
+
         if (v.getId() == R.id.floatingActionButton && messageEdit.getText().toString().isEmpty()) {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
@@ -363,6 +398,7 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
                     recordAudio();
                     if (voicePlayer != null) {
                         voicePlayer.stop();
+                        voicePlayer = null;
                     }
 //                    startTimer();
                     return true;
@@ -380,14 +416,19 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
                     timeStopped = System.currentTimeMillis();
                     duration = timeStopped - timePressed;
                     voiceDuration = voiceFormat.format(duration);
+
                     if (duration > MINIMUM_VOICE_CLIP_DURATION) {
                         Log.i(TAG, "onTouch: duration" + voiceFormat.format(duration));
                         stopAudioRecord();
                         sendMessage(VOICE_MESSAGE);
                     } else {
                         Log.i(TAG, "delete called: " + duration);
-                        File file = new File(voiceFile);
-//                        file.delete();
+                        File file = new File(voiceFileUri);
+                        file.delete();
+                    }
+                    if (timer != null) {
+                        timer.cancel();
+                        timer = null;
                     }
                     return true;
                 default:
@@ -398,33 +439,28 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
     }
 
     private void stopAudioRecord() {
-        if (timer != null) {
-            timer.cancel();
-            timer = null;
-        }
         if (recorder != null) {
             try {
                 recorder.stop();
                 recorder.release();
                 recorder = null;
             } catch (Exception e) {
-                Log.i(TAG, "stopAudioRecord: not Recording");
+                e.printStackTrace();
             }
-
         }
     }
 
     public void recordAudio() {
         // Record to the external cache directory for visibility
         final SimpleDateFormat sdf = new SimpleDateFormat("YYYYMMddss");
-        voiceFile = getExternalCacheDir().getAbsolutePath();
-        voiceFile += "/PTT-" + sdf.format(System.currentTimeMillis()) + ".3gp";
+        voiceFileUri = getExternalCacheDir().getAbsolutePath();
+        voiceFileUri += "/PTT-" + sdf.format(System.currentTimeMillis()) + ".3gp";
 
         if (checkPermissions(Manifest.permission.RECORD_AUDIO)) {
             recorder = new MediaRecorder();
             recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
             recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-            recorder.setOutputFile(voiceFile);
+            recorder.setOutputFile(voiceFileUri);
             recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
 
             try {
@@ -448,6 +484,7 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
+                Log.i(TAG, "timer is active");
                 if (voiceMicImage.getAlpha() == 0f) {
                     voiceMicImage.setAlpha(1f);
                 } else {
@@ -495,63 +532,27 @@ public class ChatActivity extends AppCompatActivity implements MessageListAdapte
         }
     }
 
-
-    public void play(final int position) {
-
-        File file = new File(mChatMessageList.get(position).getVoiceMailUri());
-        mediaPlayer = MediaPlayer.create(this, Uri.fromFile(file));
-        mediaPlayer.start();
-        isPlaying = true;
-
-        seekBar = layoutManager.findViewByPosition(position).findViewById(R.id.userVoiceSeekBar);
-        voiceDurationText = layoutManager.findViewByPosition(position).findViewById(R.id.userVoiceDuration);
-        seekBar.setTag(position);
-        Log.i(TAG, "play: seekbar tag" + seekBar.getTag().toString());
-        seekBar.setMax(mediaPlayer.getDuration());
-
-        final Timer timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        voiceDurationText.setText(voiceFormat.format(mediaPlayer.getCurrentPosition()));
-//                        seekBar.setProgress(mediaPlayer.getCurrentPosition());
-                    }
-                });
-
-            }
-        }, 200, 250);
-        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                timer.cancel();
-                seekBar.setProgress(0);
-            }
-        });
-
-
-        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            @Override
-            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                mediaPlayer.seekTo(progress);
-
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekBar) {
-                mediaPlayer.pause();
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-                mediaPlayer.start();
-            }
-        });
-    }
-
     public void backPressClick(View view) {
         super.onBackPressed();
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (voicePlayer != null) {
+            voicePlayer.stop();
+            voicePlayer = null;
+        }
+        super.onBackPressed();
+    }
+
+    @Override
+    public void messageLongClicked(int position) {
+        Toast.makeText(this, "Message Long Click", Toast.LENGTH_SHORT).show();
+        //inflate context menu to delete message & other options
+        mMessage = mChatMessageList.get(position);
+        repository = new MessageRepository(getApplication());
+        repository.delete(mMessage);
+        mChatMessageList.remove(position);
+        messageAdapter.notifyItemRemoved(position);
     }
 }

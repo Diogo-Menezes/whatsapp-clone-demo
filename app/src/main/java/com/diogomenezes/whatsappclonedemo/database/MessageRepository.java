@@ -5,6 +5,7 @@ import android.os.AsyncTask;
 
 import com.diogomenezes.whatsappclonedemo.models.Message;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MessageRepository {
@@ -24,12 +25,36 @@ public class MessageRepository {
     }
 
     public void delete(Message message) {
+        new DeleteMessageAsycn(messageDao).execute(message);
 
     }
 
-    public void deleteAll(Message message) {
+    public void deleteAll() {
+        messageDao.deleteAll();
 
     }
+
+    public List<Message> getAll(int from, int to) {
+        List<Message> messages = new ArrayList<>();
+        messages.addAll(messageDao.getAllMessages(from, to));
+        return messages;
+    }
+
+    private static class DeleteMessageAsycn extends AsyncTask<Message, Void, Void> {
+
+        private MessageDao messageDao;
+
+        public DeleteMessageAsycn(MessageDao messageDao) {
+            this.messageDao = messageDao;
+        }
+
+        @Override
+        protected Void doInBackground(Message... messages) {
+            messageDao.delete(messages[0]);
+            return null;
+        }
+    }
+
 
     private static class InsertMessageAsync extends AsyncTask<Message, Void, Void> {
         private MessageDao dao;

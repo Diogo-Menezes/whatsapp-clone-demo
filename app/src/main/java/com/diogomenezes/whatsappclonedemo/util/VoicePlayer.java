@@ -5,6 +5,7 @@ import android.content.Context;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.util.Log;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -20,8 +21,15 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import static com.diogomenezes.whatsappclonedemo.ui.contactList.FriendListActivity.USER_ID;
+
 public class VoicePlayer implements MediaPlayer.OnCompletionListener, SeekBar.OnSeekBarChangeListener {
     private static final String TAG = "VoicePlayer";
+
+    private static final int IS_NULL = -1;
+    private static final int IS_CREATED = 1;
+    private static final int IS_PLAYING = 3;
+    private static final int IS_PAUSED = 2;
 
 
     private ArrayList<Message> messageArrayList;
@@ -35,9 +43,11 @@ public class VoicePlayer implements MediaPlayer.OnCompletionListener, SeekBar.On
     private SimpleDateFormat sdf = new SimpleDateFormat("mm:ss");
     private boolean isPaused = false;
     private Activity activity;
+    private View view;
     private ImageView playButton;
     private Timer timer;
     private int pausedPosition;
+    private int mediaPlayerState = IS_NULL;
 
     public VoicePlayer(Activity activity, ArrayList<Message> messageArrayList, LinearLayoutManager layoutManager) {
         this.messageArrayList = messageArrayList;
@@ -45,52 +55,76 @@ public class VoicePlayer implements MediaPlayer.OnCompletionListener, SeekBar.On
         this.activity = activity;
     }
 
-    public VoicePlayer(Context context, ArrayList<Message> messageArrayList, SeekBar seekBar) {
+    public VoicePlayer(Context context, ArrayList<Message> messageArrayList, SeekBar seekBar, View view, TextView textView) {
         this.seekBar = seekBar;
         this.messageArrayList = messageArrayList;
         this.context = context;
+        this.view = view;
+        this.textView = textView;
     }
 
 
     public void play(int position) {
-        Log.i(TAG, "play called: " + position);
+        switch (mediaPlayerState) {
+            case IS_CREATED:
+                if (position == oldPosition) {
+                    mediaPlayer.start();
+                    mediaPlayerState = IS_PLAYING;
+                    getViews(position);
+                    createTimer();
+                } else {
+                    createPlayer(position);
+                }
+                break;
 
-        if (isPaused && position == oldPosition) {
-            Log.i(TAG, "is paused called");
-            mediaPlayer.start();
-            isPaused = false;
-            playButton.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_pause));
-            createTimer();
-        } else {
-            if (!isCreated) {
-                Log.i(TAG, "iscreated called false");
-                createPlayer(position);
-                createTimer();
-            } else {
+            case IS_PAUSED:
+                if (position == oldPosition) {
+                    mediaPlayer.start();
+                    mediaPlayerState = IS_PLAYING;
+                    playButton.setImageDrawable(
+                            activity.getResources().getDrawable(R.drawable.ic_pause));
+                    createTimer();
+                } else {
+                    stop();
+                    createPlayer(position);
+                }
+                break;
+
+            case IS_PLAYING:
                 if (position == oldPosition) {
                     Log.i(TAG, "iscreated called sameposition");
                     pausedPosition = mediaPlayer.getCurrentPosition();
                     mediaPlayer.seekTo(pausedPosition);
                     mediaPlayer.pause();
                     seekBar.setProgress(pausedPosition);
-                    isPaused = true;
+                    mediaPlayerState = IS_PAUSED;
                     timer.cancel();
                     playButton.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_play));
-                }
-                if (position != oldPosition) {
+                } else {
                     Log.i(TAG, "iscreated called different position");
-                    if (mediaPlayer.isPlaying()) {
-                        timer.cancel();
-                        playButton.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_play));
-                        mediaPlayer.seekTo(0);
-                        mediaPlayer.pause();
-                    }
-                    seekBar.setProgress(0);
+                    stop();
                     createPlayer(position);
                 }
-            }
+                break;
+            case IS_NULL:
+                createPlayer(position);
+                break;
+            default:
+                break;
         }
+    }
 
+    private void getViews(int position) {
+        if (messageArrayList.get(position).getFrom() == USER_ID) {
+            seekBar = layoutManager.findViewByPosition(position).findViewById(R.id.userVoiceSeekBar);
+            textView = layoutManager.findViewByPosition(position).findViewById(R.id.userVoiceDuration);
+            playButton = layoutManager.findViewByPosition(position).findViewById(R.id.playUserAudio);
+        } else {
+            seekBar = layoutManager.findViewByPosition(position).findViewById(R.id.friendVoiceSeekBar);
+            textView = layoutManager.findViewByPosition(position).findViewById(R.id.friendAudioDuration);
+            playButton = layoutManager.findViewByPosition(position).findViewById(R.id.playFriendAudio);
+        }
+        seekBar.setTag(position);
     }
 
     private void createPlayer(int filePosition) {
@@ -99,26 +133,48 @@ public class VoicePlayer implements MediaPlayer.OnCompletionListener, SeekBar.On
         }
         Log.i(TAG, "createPlayer: called " + filePosition);
         File file = new File(messageArrayList.get(filePosition).getVoiceMailUri());
-
         mediaPlayer = MediaPlayer.create(activity, Uri.fromFile(file));
-        mediaPlayer.start();
-        isPaused = false;
-        isCreated = true;
-        oldPosition = filePosition;
-
-        seekBar = layoutManager.findViewByPosition(filePosition).findViewById(R.id.userVoiceSeekBar);
-        textView = layoutManager.findViewByPosition(filePosition).findViewById(R.id.userVoiceDuration);
-        playButton = layoutManager.findViewByPosition(filePosition).findViewById(R.id.playUserAudio);
-        seekBar.setTag(filePosition);
+        getViews(filePosition);
         seekBar.setMax(mediaPlayer.getDuration());
-        seekBar.setProgress(0);
-        playButton.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_pause));
-        createTimer();
-        mediaPlayer.setOnCompletionListener(this);
 
+        if (seekBar.getProgress() > 0) {
+            seekBar.setProgress(seekBar.getProgress());
+            mediaPlayer.seekTo(seekBar.getProgress());
+        } else {
+            seekBar.setProgress(0);
+        }
+
+        mediaPlayer.start();
+        mediaPlayerState = IS_PLAYING;
+        oldPosition = filePosition;
+        playButton.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_pause));
+        mediaPlayer.setOnCompletionListener(this);
+        createTimer();
 
         if (mediaPlayer != null) {
             seekBar.setOnSeekBarChangeListener(this);
+        }
+    }
+
+    public void createPlayerFromSeekbar(int position) {
+        if (mediaPlayerState == IS_NULL) {
+
+            File file = new File(messageArrayList.get(position).getVoiceMailUri());
+            mediaPlayer = MediaPlayer.create(context, Uri.fromFile(file));
+            seekBar.setTag(position);
+            seekBar.setMax(mediaPlayer.getDuration());
+            int progress = (seekBar.getProgress() * mediaPlayer.getDuration()) / 100;
+
+
+            if (seekBar.getProgress() > 0) {
+                seekBar.setProgress(progress);
+                mediaPlayer.seekTo(progress);
+                textView.setText(sdf.format(mediaPlayer.getCurrentPosition()));
+            } else {
+                seekBar.setProgress(0);
+            }
+            mediaPlayerState = IS_CREATED;
+            oldPosition = position;
         }
     }
 
@@ -130,7 +186,6 @@ public class VoicePlayer implements MediaPlayer.OnCompletionListener, SeekBar.On
                 activity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-//                        seekBar.setProgress(mediaPlayer.getCurrentPosition());
                         if (mediaPlayer == null) {
                             timer.cancel();
                         } else {
@@ -146,20 +201,19 @@ public class VoicePlayer implements MediaPlayer.OnCompletionListener, SeekBar.On
     }
 
     public void stop() {
+        Log.i(TAG, "stop: called");
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
-                Log.i(TAG, "run: called");
-                if (mediaPlayer != null && mediaPlayer.isPlaying()) {
+                if (mediaPlayer != null) {
                     timer.cancel();
                     playButton.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_play));
                     textView.setText(sdf.format(mediaPlayer.getDuration()));
                     mediaPlayer.release();
                     mediaPlayer = null;
-                    isCreated = false;
-                    isPaused = false;
+                    mediaPlayerState = IS_NULL;
+                    seekBar.setProgress(0);
                     seekBar = null;
-
                 }
             }
         };
@@ -171,23 +225,13 @@ public class VoicePlayer implements MediaPlayer.OnCompletionListener, SeekBar.On
     @Override
     public void onCompletion(MediaPlayer mp) {
         Log.i(TAG, "onCompletion: called");
-        timer.cancel();
-        playButton.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_play));
-        if (seekBar != null) {
-            seekBar.setProgress(0);
-        }
-        mediaPlayer.release();
-        mediaPlayer = null;
-        seekBar = null;
-        isPaused = false;
-        isCreated = false;
-
+        stop();
     }
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         Log.i(TAG, "onProgressChanged: " + seekBar.getTag());
-        if (fromUser) {
+        if (fromUser && Integer.valueOf(seekBar.getTag().toString()) == oldPosition) {
             if (mediaPlayer != null) {
                 mediaPlayer.seekTo(progress);
                 textView.setText(sdf.format(mediaPlayer.getCurrentPosition()));
@@ -198,17 +242,17 @@ public class VoicePlayer implements MediaPlayer.OnCompletionListener, SeekBar.On
 
     @Override
     public void onStartTrackingTouch(SeekBar seekBar) {
-        if (mediaPlayer != null) {
-            mediaPlayer.pause();
-        }
-
     }
 
     @Override
     public void onStopTrackingTouch(SeekBar seekBar) {
-        if (mediaPlayer != null) {
+        if (mediaPlayer != null && mediaPlayer.isPlaying()) {
             mediaPlayer.start();
+            mediaPlayerState = IS_PLAYING;
+            playButton.setImageDrawable(activity.getResources().getDrawable(R.drawable.ic_pause));
         }
+
+
     }
 }
 

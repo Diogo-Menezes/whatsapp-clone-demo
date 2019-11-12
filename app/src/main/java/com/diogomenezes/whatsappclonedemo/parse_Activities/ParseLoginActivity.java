@@ -9,7 +9,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.diogomenezes.whatsappclonedemo.FriendListActivity;
+import com.diogomenezes.whatsappclonedemo.ui.contactList.FriendListActivity;
 import com.diogomenezes.whatsappclonedemo.R;
 import com.parse.LogInCallback;
 import com.parse.ParseAnonymousUtils;

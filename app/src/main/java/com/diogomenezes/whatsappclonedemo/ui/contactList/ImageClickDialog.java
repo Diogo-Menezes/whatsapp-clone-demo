@@ -1,8 +1,7 @@
-package com.diogomenezes.whatsappclonedemo;
+package com.diogomenezes.whatsappclonedemo.ui.contactList;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,16 +12,18 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.DialogFragment;
+
+import com.bumptech.glide.Glide;
+import com.diogomenezes.whatsappclonedemo.R;
 
 
 /*
-*
-*  Dialog that results from the clicking in the contact image
-*  in the FriendListActivity
-*
-* */
+ *
+ *  Dialog that results from the clicking in the contact image
+ *  in the FriendListActivity
+ *
+ * */
 
 public class ImageClickDialog extends DialogFragment {
     private static final String TAG = "ContactInfoDialog";
@@ -30,13 +31,13 @@ public class ImageClickDialog extends DialogFragment {
     private TextView contactName;
     private ImageView contactImage;
     private String mName;
-    private int mImage;
+    private String mImage;
     private AlertDialog.Builder builder;
 
     public ImageClickDialog() {
     }
 
-    public ImageClickDialog(String name, int image) {
+    public ImageClickDialog(String name, String image) {
         this.mName = name;
         this.mImage = image;
     }
@@ -51,11 +52,11 @@ public class ImageClickDialog extends DialogFragment {
 
         if (savedInstanceState != null) {
             mName = savedInstanceState.getString("name");
-            mImage = savedInstanceState.getInt("image");
+            mImage = savedInstanceState.getString("image");
         }
 
         contactName.setText(mName);
-        contactImage.setImageDrawable(ActivityCompat.getDrawable(view.getContext(), mImage));
+        Glide.with(getContext()).load(mImage).into(contactImage);
         return view;
     }
 
@@ -65,14 +66,14 @@ public class ImageClickDialog extends DialogFragment {
         builder = new AlertDialog.Builder(getActivity());
         Log.i(TAG, "onCreateDialog: Called");
 
-        
+
         return builder.show();
     }
 
     @Override
     public void onStart() {
         Log.i(TAG, "onStart: called");
-        if (getDialog() !=null){
+        if (getDialog() != null) {
             int width = getResources().getDimensionPixelSize(R.dimen.popup_width);
             int height = getResources().getDimensionPixelSize(R.dimen.popup_height);
             getDialog().getWindow().setLayout(width, height);
@@ -84,6 +85,6 @@ public class ImageClickDialog extends DialogFragment {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString("name", mName);
-        outState.putInt("image", mImage);
+        outState.putString("image", mImage);
     }
 }

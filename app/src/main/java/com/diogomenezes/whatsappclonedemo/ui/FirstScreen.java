@@ -1,4 +1,4 @@
-package com.diogomenezes.whatsappclonedemo;
+package com.diogomenezes.whatsappclonedemo.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,7 +6,9 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.diogomenezes.whatsappclonedemo.R;
 import com.diogomenezes.whatsappclonedemo.parse_Activities.ParseLoginActivity;
+import com.diogomenezes.whatsappclonedemo.ui.contactList.FriendListActivity;
 
 public class FirstScreen extends AppCompatActivity {
     private boolean isLogged = false;

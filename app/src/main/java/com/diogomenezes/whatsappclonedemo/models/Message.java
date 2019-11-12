@@ -1,10 +1,9 @@
 package com.diogomenezes.whatsappclonedemo.models;
 
-import android.graphics.Bitmap;
-
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.PrimaryKey;
 
 @Entity(tableName = "message_table")
@@ -14,14 +13,6 @@ public class Message {
     public static final int VOICE_MESSAGE = 1;
     public static final int IMAGE_MESSAGE = 2;
     public static final int VIDEO_MESSAGE = 3;
-
-    public Message(String message, int from, int to, int type, long date) {
-        this.message = message;
-        this.from = from;
-        this.to = to;
-        this.type = type;
-        this.date = date;
-    }
 
     @NonNull
     @PrimaryKey(autoGenerate = true)
@@ -42,7 +33,7 @@ public class Message {
     private int to;
 
     @ColumnInfo(name = "image_message")
-    private Bitmap bitmap;
+    private String image;
 
     @ColumnInfo(name = "voice_mail_uri")
     private String voiceMailUri;
@@ -58,41 +49,46 @@ public class Message {
     @ColumnInfo(name = "message_date")
     private long date;
 
+    private long dateReceived;
+    private long dateRead;
+    private int sent;
+    private int received;
+
     public Message() {
     }
 
+    //MESSAGE CONSTRUCTOR
+    @Ignore
+    public Message(int type, String message, int from, int to, long date) {
+        this.message = message;
+        this.from = from;
+        this.to = to;
+        this.type = type;
+        this.date = date;
+    }
+
+    @Ignore
     public Message(int type) {
         this.type = type;
     }
 
-    public Message(int type, String message, String time, int from, Bitmap bitmap) {
-        this.type = type;
-        this.message = message;
-        this.time = time;
-        this.from = from;
-        this.bitmap = bitmap;
-    }
-
-    public Message(int type, String time, String voiceMailUri, String voiceMailDuration, int from) {
+    @Ignore
+    public Message(int type, String time, String voiceMailUri, String voiceMailDuration, int from, int to, long date) {
         this.type = type;
         this.time = time;
         this.from = from;
         this.voiceMailUri = voiceMailUri;
         this.voiceMailDuration = voiceMailDuration;
+        this.date = date;
     }
 
-    public Message(int type, String time, int from, Bitmap bitmap) {
-        this.type = type;
-        this.time = time;
-        this.from = from;
-        this.bitmap = bitmap;
-    }
-
-    public Message(int type, String message, String time, int from) {
+    @Ignore
+    public Message(int type, String message, String time, int from, long date) {
         this.type = type;
         this.message = message;
         this.time = time;
         this.from = from;
+        this.date = date;
     }
 
     public String getMessage() {
@@ -101,6 +97,14 @@ public class Message {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public int getMessageID() {
+        return messageID;
+    }
+
+    public void setMessageID(int messageID) {
+        this.messageID = messageID;
     }
 
     public String getTime() {
@@ -119,12 +123,20 @@ public class Message {
         this.from = from;
     }
 
-    public Bitmap getBitmap() {
-        return bitmap;
+    public int getTo() {
+        return to;
     }
 
-    public void setBitmap(Bitmap bitmap) {
-        this.bitmap = bitmap;
+    public void setTo(int to) {
+        this.to = to;
+    }
+
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
     public String getVoiceMailUri() {
@@ -149,5 +161,45 @@ public class Message {
 
     public void setType(int type) {
         this.type = type;
+    }
+
+    public long getDate() {
+        return date;
+    }
+
+    public void setDate(long date) {
+        this.date = date;
+    }
+
+    public long getDateReceived() {
+        return dateReceived;
+    }
+
+    public void setDateReceived(long dateReceived) {
+        this.dateReceived = dateReceived;
+    }
+
+    public long getDateRead() {
+        return dateRead;
+    }
+
+    public void setDateRead(long dateRead) {
+        this.dateRead = dateRead;
+    }
+
+    public int getSent() {
+        return sent;
+    }
+
+    public void setSent(int sent) {
+        this.sent = sent;
+    }
+
+    public int getReceived() {
+        return received;
+    }
+
+    public void setReceived(int received) {
+        this.received = received;
     }
 }

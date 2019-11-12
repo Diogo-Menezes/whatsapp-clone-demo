@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.diogomenezes.whatsappclonedemo.R;
 import com.diogomenezes.whatsappclonedemo.models.ContactList;
 
@@ -85,13 +86,8 @@ public class ChatListAdapter extends RecyclerView.Adapter<ChatListAdapter.chatLi
             holder.unreadMessages.setVisibility(View.GONE);
         } else {
             holder.unreadMessages.setText(mChatList.get(position).getUnreadMessages());
-//            int unread = Integer.valueOf(mChatList.get(position).getUnreadMessages());
-//            if (unread>999){
-//                holder.unreadMessages.setText("+999");
-//
-//            }
         }
-        holder.contactPicture.setImageBitmap(mChatList.get(position).getContactImage());
+        Glide.with(holder.itemView.getContext()).load(mChatList.get(position).getContactImage()).into(holder.contactPicture);
     }
 
     @Override

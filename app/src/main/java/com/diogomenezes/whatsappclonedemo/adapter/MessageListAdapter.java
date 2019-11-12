@@ -1,6 +1,5 @@
 package com.diogomenezes.whatsappclonedemo.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.media.MediaPlayer;
 import android.util.Log;
@@ -16,7 +15,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.diogomenezes.whatsappclonedemo.ChatActivity;
+import com.bumptech.glide.Glide;
 import com.diogomenezes.whatsappclonedemo.R;
 import com.diogomenezes.whatsappclonedemo.models.Message;
 import com.diogomenezes.whatsappclonedemo.util.VoicePlayer;
@@ -26,7 +25,8 @@ import java.util.ArrayList;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import static com.diogomenezes.whatsappclonedemo.ChatActivity.FROM_USER;
+import static com.diogomenezes.whatsappclonedemo.ui.chat.ChatActivity.FROM_FRIEND;
+import static com.diogomenezes.whatsappclonedemo.ui.chat.ChatActivity.FROM_USER;
 import static com.diogomenezes.whatsappclonedemo.models.Message.IMAGE_MESSAGE;
 import static com.diogomenezes.whatsappclonedemo.models.Message.TEXT_MESSAGE;
 import static com.diogomenezes.whatsappclonedemo.models.Message.VIDEO_MESSAGE;
@@ -37,7 +37,9 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
     private static final String TAG = "MessageListAdapter";
 
     private ArrayList<Message> mChatMessageList;
-    private MessageLongClick mMessageClick;
+    private String userImageUri, friendImageUri;
+    private MessageClick mMessageClick;
+    private MessageLongClick mMessageLongClick;
     private Context context;
     private MediaPlayer mediaPlayer;
     SimpleDateFormat dateFormat = new SimpleDateFormat("mm:ss");
@@ -45,9 +47,12 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
     private View view;
     private boolean isPlaying = false;
 
-    public MessageListAdapter(ArrayList<Message> mChatMessage, MessageLongClick mMessageClick) {
+    public MessageListAdapter(ArrayList<Message> mChatMessage, MessageClick mMessageClick, MessageLongClick mMessageLongClick, String userImageUri, String friendImageUri) {
         this.mChatMessageList = mChatMessage;
         this.mMessageClick = mMessageClick;
+        this.mMessageLongClick = mMessageLongClick;
+        this.userImageUri = userImageUri;
+        this.friendImageUri = friendImageUri;
     }
 
     class MessageViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener, View.OnClickListener, SeekBar.OnSeekBarChangeListener {
@@ -58,13 +63,16 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
         //VOICE_MESSAGE
         private RelativeLayout userVoiceLayout, friendVoiceLayout;
         private CircleImageView userImage, friendImage;
-        private MessageLongClick messageClick;
-        private PlayButtonClicked playButtonClicked;
+        private MessageClick messageClick;
+        private MessageLongClick messageLongClick;
+
         private ImageView friendPlayButton, userPlayButton;
         private TextView friendVoiceDuration, userVoiceDuration, userVoiceDate, friendVoiceDate;
         private SeekBar userSeekBar, friendSeekbar;
+        private VoicePlayer voicePlayer;
 
-        public MessageViewHolder(@NonNull final View itemView, MessageLongClick click) {
+
+        public MessageViewHolder(@NonNull final View itemView, MessageClick click, MessageLongClick longClick) {
             super(itemView);
             view = itemView;
             context = itemView.getContext();
@@ -92,23 +100,26 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
             friendSeekbar = itemView.findViewById(R.id.friendVoiceSeekBar);
 
             this.messageClick = click;
+            this.messageLongClick = longClick;
             userPlayButton.setOnClickListener(this);
             friendPlayButton.setOnClickListener(this);
-            itemView.setOnLongClickListener(this);
             userSeekBar.setOnSeekBarChangeListener(this);
+            friendSeekbar.setOnSeekBarChangeListener(this);
+            itemView.setOnLongClickListener(this);
 
         }
 
         @Override
         public boolean onLongClick(View v) {
-            messageClick.messageLongClicked(getAdapterPosition());
+            messageLongClick.messageLongClicked(getAdapterPosition());
             return true;
         }
 
         @Override
         public void onClick(View v) {
+            Log.i(TAG, "onClick: adapter called " + v.toString());
             if (v.getId() == userPlayButton.getId() || v.getId() == friendPlayButton.getId()) {
-                messageClick.messageLongClicked(getAdapterPosition());
+                messageClick.messageClicked(getAdapterPosition());
             }
         }
 
@@ -124,6 +135,14 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
 
         @Override
         public void onStopTrackingTouch(SeekBar seekBar) {
+            TextView textView;
+            if (mChatMessageList.get(getAdapterPosition()).getFrom() == FROM_FRIEND) {
+                textView = itemView.findViewById(R.id.friendAudioDuration);
+            } else {
+                textView = itemView.findViewById(R.id.userVoiceDuration);
+            }
+            voicePlayer = new VoicePlayer(context, mChatMessageList, seekBar, view, textView);
+            voicePlayer.createPlayerFromSeekbar(getLayoutPosition());
 
         }
     }
@@ -132,10 +151,14 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
         void messageLongClicked(int position);
     }
 
+    public interface MessageClick {
+        void messageClicked(int position);
+    }
+
     @NonNull
     @Override
     public MessageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new MessageViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chat_layout, parent, false), mMessageClick);
+        return new MessageViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_chat_layout, parent, false), mMessageClick, mMessageLongClick);
     }
 
     @Override
@@ -159,16 +182,16 @@ public class MessageListAdapter extends RecyclerView.Adapter<MessageListAdapter.
                     holder.userVoiceLayout.setVisibility(View.VISIBLE);
                     holder.userVoiceDuration.setText(mChatMessageList.get(position).getVoiceMailDuration());
                     holder.userVoiceDate.setText(mChatMessageList.get(position).getTime());
-                    holder.userSeekBar.setTag(position);
-//                    holder.userImage.setImageBitmap(mChatMessageList.get(position).getBitmap());
+//                    holder.userSeekBar.setTag(position);
+                    Glide.with(holder.itemView).load(userImageUri).into(holder.userImage);
                 } else {
                     holder.friendMessageLayout.setVisibility(View.GONE);
                     holder.userMessageLayout.setVisibility(View.GONE);
                     holder.friendVoiceLayout.setVisibility(View.VISIBLE);
                     holder.friendVoiceDuration.setText(mChatMessageList.get(position).getVoiceMailDuration());
-                    holder.friendVoiceDuration.setText(mChatMessageList.get(position).getTime());
-                    holder.userSeekBar.setTag(position);
-//                    holder.friendImage.setImageBitmap(mChatMessageList.get(position).getBitmap());
+                    holder.friendVoiceDate.setText(mChatMessageList.get(position).getTime());
+//                    holder.friendSeekbar.setTag(mChatMessageList.get(position).getDate());// TODO: 11/11/2019 change..should be unique... ex.: userID + voiceDuration
+                    Glide.with(context).load(friendImageUri).into(holder.friendImage);
                 }
                 break;
             case VIDEO_MESSAGE:
