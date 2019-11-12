@@ -95,8 +95,8 @@ public class ImageClickDialog extends DialogFragment implements View.OnClickList
     public void onStart() {
         Log.i(TAG, "onStart: called");
         if (getDialog() != null) {
-            int width = getResources().getDimensionPixelSize(R.dimen.popup_width);
-            int height = getResources().getDimensionPixelSize(R.dimen.popup_height);
+            int width = getResources().getDimensionPixelSize(R.dimen.popup_dialog_width);
+            int height = getResources().getDimensionPixelSize(R.dimen.popup_dialog_height);
             getDialog().getWindow().setLayout(width, height);
         }
         super.onStart();

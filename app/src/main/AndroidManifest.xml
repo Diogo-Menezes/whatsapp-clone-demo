@@ -17,6 +17,9 @@
         android:supportsRtl="true"
         android:theme="@style/BaseTheme">
         <activity
+            android:name=".MainAct"
+            android:theme="@style/BaseTheme.NoActionBar"></activity>
+        <activity
             android:name=".ui.chat.ChatActivity"
             android:theme="@style/BaseTheme.NoActionBar" />
         <activity android:name=".ui.contactList.MainActivity" />

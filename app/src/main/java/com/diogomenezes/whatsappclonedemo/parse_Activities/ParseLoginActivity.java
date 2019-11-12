@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.diogomenezes.whatsappclonedemo.MainAct;
 import com.diogomenezes.whatsappclonedemo.ui.contactList.MainActivity;
 import com.diogomenezes.whatsappclonedemo.R;
 import com.parse.LogInCallback;
@@ -51,7 +52,7 @@ public class ParseLoginActivity extends AppCompatActivity {
     }
 
     private void redirect() {
-        startActivity(new Intent(this, MainActivity.class));
+        startActivity(new Intent(this, MainAct.class));
         finish();
 
     }

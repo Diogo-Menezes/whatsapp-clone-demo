@@ -1,7 +1,7 @@
 <resources>
     <dimen name="fab_margin">16dp</dimen>
-    <dimen name="popup_width">300dp</dimen>
-    <dimen name="popup_height">330dp</dimen>
+    <dimen name="popup_dialog_width">300dp</dimen>
+    <dimen name="popup_dialog_height">330dp</dimen>
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
