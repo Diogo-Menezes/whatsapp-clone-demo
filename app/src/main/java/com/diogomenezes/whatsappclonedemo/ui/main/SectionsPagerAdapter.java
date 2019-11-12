@@ -1,7 +1,9 @@
 package com.diogomenezes.whatsappclonedemo.ui.main;
 
 import android.content.Context;
+import android.view.ViewGroup;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
 import androidx.fragment.app.Fragment;
@@ -20,7 +22,7 @@ import com.diogomenezes.whatsappclonedemo.ui.contactList.fragments.StoriesFragme
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @StringRes
-    private static final int[] TAB_TITLES = new int[]{R.string.tab_text_1, R.string.tab_text_2,R.string.tab_text_3};
+    private static final int[] TAB_TITLES = new int[]{R.string.tab_text_0, R.string.tab_text_1, R.string.tab_text_2, R.string.tab_text_3};
     private final Context mContext;
 
     public SectionsPagerAdapter(Context context, FragmentManager fm) {
@@ -33,12 +35,15 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         Fragment fragment = null;
         switch (position) {
             case 0:
-                fragment = new ContactListFragment();
+                fragment = PlaceholderFragment.newInstance(0);
                 break;
             case 1:
-                fragment = new StoriesFragment();
+                fragment = new ContactListFragment();
                 break;
             case 2:
+                fragment = new StoriesFragment();
+                break;
+            case 3:
                 fragment = new CallHistoryFragment();
                 break;
             default:
@@ -46,6 +51,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         }
         return fragment;
     }
+
 
     @Nullable
     @Override
@@ -55,7 +61,6 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        // Show 2 total pages.
-        return 3;
+        return 4;
     }
 }
