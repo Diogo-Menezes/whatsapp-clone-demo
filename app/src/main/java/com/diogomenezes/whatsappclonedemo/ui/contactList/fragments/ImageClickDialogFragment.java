@@ -1,4 +1,4 @@
-package com.diogomenezes.whatsappclonedemo.ui.contactList;
+package com.diogomenezes.whatsappclonedemo.ui.contactList.fragments;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -20,9 +20,9 @@ import com.bumptech.glide.Glide;
 import com.diogomenezes.whatsappclonedemo.R;
 import com.diogomenezes.whatsappclonedemo.ui.chat.ChatActivity;
 
-import static com.diogomenezes.whatsappclonedemo.ui.contactList.MainActivity.FRIEND_ID;
-import static com.diogomenezes.whatsappclonedemo.ui.contactList.MainActivity.FRIEND_IMAGE;
-import static com.diogomenezes.whatsappclonedemo.ui.contactList.MainActivity.FRIEND_NAME;
+import static com.diogomenezes.whatsappclonedemo.ui.contactList.MainAct.FRIEND_ID;
+import static com.diogomenezes.whatsappclonedemo.ui.contactList.MainAct.FRIEND_IMAGE;
+import static com.diogomenezes.whatsappclonedemo.ui.contactList.MainAct.FRIEND_NAME;
 
 
 /*
@@ -32,7 +32,7 @@ import static com.diogomenezes.whatsappclonedemo.ui.contactList.MainActivity.FRI
  *
  * */
 
-public class ImageClickDialog extends DialogFragment implements View.OnClickListener {
+public class ImageClickDialogFragment extends DialogFragment implements View.OnClickListener {
     private static final String TAG = "ContactInfoDialog";
 
     private TextView contactName;
@@ -43,10 +43,10 @@ public class ImageClickDialog extends DialogFragment implements View.OnClickList
     private int position;
     private AlertDialog.Builder builder;
 
-    public ImageClickDialog() {
+    public ImageClickDialogFragment() {
     }
 
-    public ImageClickDialog(String name, String image, int id, int position) {
+    public ImageClickDialogFragment(String name, String image, int id, int position) {
         this.mName = name;
         this.mImage = image;
         this.mId = id;

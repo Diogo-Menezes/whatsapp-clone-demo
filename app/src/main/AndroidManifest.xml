@@ -7,6 +7,8 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.hardware.camera2.full" />
 
     <application
         android:name=".App"
@@ -17,12 +19,12 @@
         android:supportsRtl="true"
         android:theme="@style/BaseTheme">
         <activity
-            android:name=".MainAct"
+            android:name=".ui.contactList.MainAct"
             android:theme="@style/BaseTheme.NoActionBar"></activity>
         <activity
             android:name=".ui.chat.ChatActivity"
             android:theme="@style/BaseTheme.NoActionBar" />
-        <activity android:name=".ui.contactList.MainActivity" />
+        <activity android:name=".ui.contactList.Main" />
         <activity android:name=".FirstScreen" />
         <activity android:name=".parse_Activities.ParseUserListActivity" />
         <activity android:name=".parse_Activities.ParseChatActivity" />

@@ -5,7 +5,7 @@
     <string name="welcome_to_whatsapp">Welcome to WhatsApp</string>
     <string name="title_activity_main2">Main2Activity</string>
     <string name="title_activity_main3">Main3Activity</string>
-    <string name="tab_text_0">R.drawable.ic_cam</string>
+    <string name="tab_text_0"></string>
     <string name="tab_text_1">Talks</string>
     <string name="tab_text_2">Stories</string>
     <string name="tab_text_3">Calls</string>

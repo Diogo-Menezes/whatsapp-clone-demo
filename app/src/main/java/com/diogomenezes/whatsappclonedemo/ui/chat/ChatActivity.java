@@ -52,9 +52,9 @@ import static com.diogomenezes.whatsappclonedemo.models.Message.IMAGE_MESSAGE;
 import static com.diogomenezes.whatsappclonedemo.models.Message.TEXT_MESSAGE;
 import static com.diogomenezes.whatsappclonedemo.models.Message.VIDEO_MESSAGE;
 import static com.diogomenezes.whatsappclonedemo.models.Message.VOICE_MESSAGE;
-import static com.diogomenezes.whatsappclonedemo.ui.contactList.MainActivity.FRIEND_ID;
-import static com.diogomenezes.whatsappclonedemo.ui.contactList.MainActivity.FRIEND_IMAGE;
-import static com.diogomenezes.whatsappclonedemo.ui.contactList.MainActivity.FRIEND_NAME;
+import static com.diogomenezes.whatsappclonedemo.ui.contactList.MainAct.FRIEND_ID;
+import static com.diogomenezes.whatsappclonedemo.ui.contactList.MainAct.FRIEND_IMAGE;
+import static com.diogomenezes.whatsappclonedemo.ui.contactList.MainAct.FRIEND_NAME;
 
 public class ChatActivity extends AppCompatActivity implements MessageListAdapter.MessageClick, MessageListAdapter.MessageLongClick, View.OnClickListener, View.OnTouchListener {
     private static final String TAG = "NewChatActivity";

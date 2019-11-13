@@ -48,7 +48,7 @@ public class ParseUserListActivity extends AppCompatActivity implements ListView
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_friend_user_list);
+        setContentView(R.layout.fragment_friend_user_list);
         setTitle("Friend List");
         user = ParseUser.getCurrentUser();
         userListView = findViewById(R.id.userListView);

@@ -1,7 +1,7 @@
-package com.diogomenezes.whatsappclonedemo.ui.main;
+package com.diogomenezes.whatsappclonedemo.ui.contactList;
 
 import android.content.Context;
-import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.diogomenezes.whatsappclonedemo.R;
 import com.diogomenezes.whatsappclonedemo.ui.contactList.fragments.CallHistoryFragment;
+import com.diogomenezes.whatsappclonedemo.ui.contactList.fragments.CameraFragment;
 import com.diogomenezes.whatsappclonedemo.ui.contactList.fragments.ContactListFragment;
 import com.diogomenezes.whatsappclonedemo.ui.contactList.fragments.StoriesFragment;
 
@@ -25,17 +26,19 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     private static final int[] TAB_TITLES = new int[]{R.string.tab_text_0, R.string.tab_text_1, R.string.tab_text_2, R.string.tab_text_3};
     private final Context mContext;
 
-    public SectionsPagerAdapter(Context context, FragmentManager fm) {
-        super(fm);
-        mContext = context;
+    public SectionsPagerAdapter(@NonNull FragmentManager fm, int behavior, Context context) {
+        super(fm, behavior);
+        this.mContext = context;
     }
+
 
     @Override
     public Fragment getItem(int position) {
         Fragment fragment = null;
         switch (position) {
             case 0:
-                fragment = PlaceholderFragment.newInstance(0);
+                fragment = CameraFragment.newInstance(0);
+
                 break;
             case 1:
                 fragment = new ContactListFragment();
@@ -49,6 +52,9 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
             default:
                 break;
         }
+        if (fragment.equals(ContactListFragment.class)) {
+            Toast.makeText(mContext, "Camera", Toast.LENGTH_SHORT).show();
+        }
         return fragment;
     }
 
@@ -56,6 +62,9 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     @Nullable
     @Override
     public CharSequence getPageTitle(int position) {
+        if (position == 0) {
+
+        }
         return mContext.getResources().getString(TAB_TITLES[position]);
     }
 

@@ -18,13 +18,12 @@ import com.diogomenezes.whatsappclonedemo.R;
 import com.diogomenezes.whatsappclonedemo.ui.contactList.adapter.ContactListAdapter;
 import com.diogomenezes.whatsappclonedemo.models.ContactList;
 import com.diogomenezes.whatsappclonedemo.ui.chat.ChatActivity;
-import com.diogomenezes.whatsappclonedemo.ui.contactList.ImageClickDialog;
 
 import java.util.ArrayList;
 
-import static com.diogomenezes.whatsappclonedemo.ui.contactList.MainActivity.FRIEND_ID;
-import static com.diogomenezes.whatsappclonedemo.ui.contactList.MainActivity.FRIEND_IMAGE;
-import static com.diogomenezes.whatsappclonedemo.ui.contactList.MainActivity.FRIEND_NAME;
+import static com.diogomenezes.whatsappclonedemo.ui.contactList.MainAct.FRIEND_ID;
+import static com.diogomenezes.whatsappclonedemo.ui.contactList.MainAct.FRIEND_IMAGE;
+import static com.diogomenezes.whatsappclonedemo.ui.contactList.MainAct.FRIEND_NAME;
 
 public class ContactListFragment extends Fragment implements ContactListAdapter.ContactClick, ContactListAdapter.OnImageClick {
     private static final String TAG = "ContactListFragment";
@@ -48,7 +47,7 @@ public class ContactListFragment extends Fragment implements ContactListAdapter.
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.activity_friend_user_list, container, false);
+        return inflater.inflate(R.layout.fragment_friend_user_list, container, false);
     }
 
     @Override
@@ -72,7 +71,7 @@ public class ContactListFragment extends Fragment implements ContactListAdapter.
     @Override
     public void contactImageClick(int position) {
         contactPosition = position;
-        dialogFragment = new ImageClickDialog(mChatList.get(position).getContactName(), friendImagesUri.get(position),userId.get(position),position);
+        dialogFragment = new ImageClickDialogFragment(mChatList.get(position).getContactName(), friendImagesUri.get(position),userId.get(position),position);
         if (getActivity()!=null){
             dialogFragment.show(getActivity().getSupportFragmentManager(), "contactDialog");
         }

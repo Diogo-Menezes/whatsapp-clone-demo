@@ -12,12 +12,8 @@ import androidx.fragment.app.Fragment;
 import com.diogomenezes.whatsappclonedemo.R;
 import com.diogomenezes.whatsappclonedemo.ui.contactList.fragments.ContactListFragment;
 
-public class MainActivity extends AppCompatActivity  {
-    private static final String TAG = "FriendListActivity";
-    public static final String FRIEND_ID = "friend_id";
-    public static final String FRIEND_IMAGE = "friend_image_uri";
-    public static final String FRIEND_NAME="friend_name";
-    public static int USER_ID = 100;
+public class Main extends AppCompatActivity  {
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

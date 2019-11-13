@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import static com.diogomenezes.whatsappclonedemo.ui.contactList.MainActivity.USER_ID;
+import static com.diogomenezes.whatsappclonedemo.ui.contactList.MainAct.USER_ID;
 
 public class VoicePlayer implements MediaPlayer.OnCompletionListener, SeekBar.OnSeekBarChangeListener {
     private static final String TAG = "VoicePlayer";
