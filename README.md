@@ -15,6 +15,7 @@ I used parse server for login and registration, but I had plans to port the logi
   <br>
   
 
+
 # Screenshots
 
 ![Contact List](screenshots/screen1.png "Contact List")
@@ -23,8 +24,11 @@ I used parse server for login and registration, but I had plans to port the logi
 ![Chat Menu](screenshots/screen4.png "List of Blog Posts with the filter option")
 
 <br>
-
-### The persons used in the images are for demonstration purposes only. Models downloaded from [Unsplash.com](https://unsplash.com/) 
+ In app real images
+<br>
+ 
+### Image credits
+#### The persons used in the images are for demonstration purposes only. Models downloaded from [Unsplash.com](https://unsplash.com/) 
 
   <br>
   <br>
