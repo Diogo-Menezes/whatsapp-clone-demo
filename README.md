@@ -2,20 +2,22 @@
 
 This project is all about the design. With this project I try to make a similar UI and add some features of the popular messaging App *Whatsapp.*
 
-Also I tried to develop some of the functionality from the application too.
+Also I tried to develop some of the functionality from the application too (eg. audio recorder).
+
 I used parse server for login and registration, but I had plans to port the login and registration to Firebase authentication and as online database.
+  <br>
 
 # Key features
 * <p><b>Voice record and send</b>
+* <p><b>Message send</b>
 * <p><b>Animations</b>
 * <p><b>Camera feature</b>
 * <p><b>Parse Server</b>
 * <p><b>Database for Offline Caching</b>
+  
   <br>
   <br>
   
-
-
 # Screenshots
 
 ![Contact List](screenshots/screen1.png "Contact List")
@@ -24,7 +26,7 @@ I used parse server for login and registration, but I had plans to port the logi
 ![Chat Menu](screenshots/screen4.png "List of Blog Posts with the filter option")
 
 <br>
- In app real images
+ In app real images.
 <br>
  
 ### Image credits
