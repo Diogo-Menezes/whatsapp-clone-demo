@@ -27,7 +27,7 @@ public class ParseLoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_login);
         setTitle("WhatsApp Login");
         userNameEdit = findViewById(R.id.nameEditText);
         passEdit = findViewById(R.id.passEditText);

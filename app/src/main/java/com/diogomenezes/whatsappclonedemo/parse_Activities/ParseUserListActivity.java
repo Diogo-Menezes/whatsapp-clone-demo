@@ -136,14 +136,14 @@ public class ParseUserListActivity extends AppCompatActivity implements ListView
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
 
-        inflater.inflate(R.menu.friend_list_menu, menu);
+        inflater.inflate(R.menu.contact_list_menu, menu);
 
         return super.onCreateOptionsMenu(menu);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.sign_out_menu) {
+        if (item.getItemId() == R.id.action_logout) {
             ParseUser.logOut();
             startActivity(new Intent(ParseUserListActivity.this, ParseLoginActivity.class));
             finish();

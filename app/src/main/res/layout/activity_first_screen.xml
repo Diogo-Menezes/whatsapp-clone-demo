@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/appLogo"
-        android:layout_width="178dp"
-        android:layout_height="207dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/agreeText"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
@@ -26,6 +26,7 @@
         android:layout_marginEnd="24dp"
         android:layout_marginRight="24dp"
         android:layout_marginBottom="16dp"
+        android:textAlignment="center"
         android:text="@string/privacy_policy_login_text"
         app:layout_constraintBottom_toTopOf="@+id/agreeButton"
         app:layout_constraintEnd_toEndOf="parent"

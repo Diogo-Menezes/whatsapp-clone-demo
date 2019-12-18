@@ -2,6 +2,9 @@ package com.diogomenezes.whatsappclonedemo.ui.contactList;
 
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
@@ -11,6 +14,7 @@ import androidx.fragment.app.Fragment;
 
 import com.diogomenezes.whatsappclonedemo.R;
 import com.diogomenezes.whatsappclonedemo.ui.contactList.fragments.ContactListFragment;
+import com.parse.ParseUser;
 
 public class Main extends AppCompatActivity  {
 

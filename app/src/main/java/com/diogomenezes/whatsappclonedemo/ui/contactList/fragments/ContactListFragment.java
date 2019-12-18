@@ -127,4 +127,5 @@ public class ContactListFragment extends Fragment implements ContactListAdapter.
             mChatList.add(mChat);
         }
     }
+
 }
