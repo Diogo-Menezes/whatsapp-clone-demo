@@ -23,8 +23,7 @@ I used parse server for login and registration, but I had plans to port the logi
 ![Chat Menu](screenshots/screen4.png "List of Blog Posts with the filter option")
 
 ### Images and models used for demonstration purposes only. Credits [Unsplash.com](https://unsplash.com/) 
-  <br>
-  <br>
+
   
 # Libraries Used
  * <p><b>Room</b> - Caching the network data for offline use.</p> 
@@ -42,7 +41,5 @@ I used parse server for login and registration, but I had plans to port the logi
   <br>
   <br>
   
----
-
 ## Disclaimer
 ###### All the code was developed and written by me.
