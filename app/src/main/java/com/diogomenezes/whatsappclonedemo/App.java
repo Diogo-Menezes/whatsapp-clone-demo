@@ -19,8 +19,6 @@ public class App extends Application {
                 .build()
         );
 
-//        ParseUser.enableAutomaticUser();
-
         ParseACL defaultACL = new ParseACL();
         defaultACL.setPublicReadAccess(true);
         defaultACL.setPublicWriteAccess(true);
