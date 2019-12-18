@@ -26,9 +26,10 @@
             android:theme="@style/BaseTheme.NoActionBar" />
         <activity android:name=".ui.contactList.Main" />
 
-        <activity android:name=".parse_Activities.ParseUserListActivity" />
-        <activity android:name=".parse_Activities.ParseChatActivity" />
-        <activity android:name=".parse_Activities.ParseLoginActivity" />
+        <activity android:name=".parse_activities.ParseUserListActivity" />
+        <activity android:name=".parse_activities.ParseChatActivity" />
+        <activity android:name=".parse_activities.ParseLoginActivity"
+            android:windowSoftInputMode="adjustResize"/>
         <activity android:name=".FirstScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

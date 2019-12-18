@@ -1,4 +1,4 @@
-package com.diogomenezes.whatsappclonedemo.parse_Activities;
+package com.diogomenezes.whatsappclonedemo.parse_activities;
 
 import android.content.Context;
 import android.content.DialogInterface;

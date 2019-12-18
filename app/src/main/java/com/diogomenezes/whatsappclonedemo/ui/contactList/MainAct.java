@@ -18,6 +18,8 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.diogomenezes.whatsappclonedemo.FirstScreen;
 import com.diogomenezes.whatsappclonedemo.R;
+import com.diogomenezes.whatsappclonedemo.ui.contactList.adapter.SectionsPagerAdapter;
+import com.diogomenezes.whatsappclonedemo.ui.contactList.viewmodel.PageViewModel;
 import com.google.android.material.tabs.TabLayout;
 import com.parse.ParseUser;
 

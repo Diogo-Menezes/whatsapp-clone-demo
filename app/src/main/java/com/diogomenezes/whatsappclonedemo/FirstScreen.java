@@ -6,11 +6,11 @@ import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.diogomenezes.whatsappclonedemo.parse_Activities.ParseLoginActivity;
-import com.diogomenezes.whatsappclonedemo.ui.contactList.Main;
+import com.diogomenezes.whatsappclonedemo.parse_activities.ParseLoginActivity;
+import com.diogomenezes.whatsappclonedemo.ui.contactList.MainAct;
+import com.parse.ParseUser;
 
 public class FirstScreen extends AppCompatActivity {
-    private boolean isLogged = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,13 +20,14 @@ public class FirstScreen extends AppCompatActivity {
         getSupportActionBar().hide();
 
         //GET SESSION TOKEN
-        if (isLogged) {
+        if (ParseUser.getCurrentUser() != null) {
+            startActivity(new Intent(this, MainAct.class));
             finish();
-            startActivity(new Intent(this, Main.class));
         }
     }
 
     public void agreeClicked(View view) {
         startActivity(new Intent(this, ParseLoginActivity.class));
+//        finish();
     }
 }

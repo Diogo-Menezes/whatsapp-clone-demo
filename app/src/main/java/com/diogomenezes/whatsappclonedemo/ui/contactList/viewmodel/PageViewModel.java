@@ -1,4 +1,4 @@
-package com.diogomenezes.whatsappclonedemo.ui.contactList;
+package com.diogomenezes.whatsappclonedemo.ui.contactList.viewmodel;
 
 import androidx.arch.core.util.Function;
 import androidx.lifecycle.LiveData;

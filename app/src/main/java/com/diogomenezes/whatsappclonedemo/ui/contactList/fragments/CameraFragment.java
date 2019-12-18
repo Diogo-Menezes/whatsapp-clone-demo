@@ -40,7 +40,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 
 import com.diogomenezes.whatsappclonedemo.R;
-import com.diogomenezes.whatsappclonedemo.ui.contactList.PageViewModel;
+import com.diogomenezes.whatsappclonedemo.ui.contactList.viewmodel.PageViewModel;
 
 import java.io.File;
 import java.io.FileNotFoundException;

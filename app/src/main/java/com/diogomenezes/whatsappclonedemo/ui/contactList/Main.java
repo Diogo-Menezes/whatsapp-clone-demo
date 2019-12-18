@@ -18,13 +18,13 @@ import com.parse.ParseUser;
 
 public class Main extends AppCompatActivity  {
 
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main2);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_host,new ContactListFragment()).commit();
-
-    }
+//
+//    @Override
+//    protected void onCreate(Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        setContentView(R.layout.activity_main2);
+//        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_host,new ContactListFragment()).commit();
+//
+//    }
 
 }

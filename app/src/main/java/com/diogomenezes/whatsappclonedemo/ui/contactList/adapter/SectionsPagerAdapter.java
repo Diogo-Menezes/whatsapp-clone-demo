@@ -1,4 +1,4 @@
-package com.diogomenezes.whatsappclonedemo.ui.contactList;
+package com.diogomenezes.whatsappclonedemo.ui.contactList.adapter;
 
 import android.content.Context;
 import android.widget.Toast;
