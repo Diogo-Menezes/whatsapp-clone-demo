@@ -24,6 +24,8 @@ I used parse server for login and registration, but I had plans to port the logi
 
 ### Images and models used for demonstration purposes only. Credits [Unsplash.com](https://unsplash.com/) 
 
+  <br>
+  <br>
   
 # Libraries Used
  * <p><b>Room</b> - Caching the network data for offline use.</p> 
