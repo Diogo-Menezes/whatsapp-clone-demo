@@ -22,7 +22,9 @@ I used parse server for login and registration, but I had plans to port the logi
 ![Chat screen](screenshots/screen3.png "List of blog posts")
 ![Chat Menu](screenshots/screen4.png "List of Blog Posts with the filter option")
 
-### Images and models used for demonstration purposes only. Credits [Unsplash.com](https://unsplash.com/) 
+<br>
+
+### The persons used in the images are for demonstration purposes only. Models downloaded from [Unsplash.com](https://unsplash.com/) 
 
   <br>
   <br>
