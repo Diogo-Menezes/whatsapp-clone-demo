@@ -20,12 +20,13 @@ I used parse server for login and registration, but I had plans to port the logi
   
 # Screenshots
 
+![Welcome Screen](screenshots/screen5.png "Welcome screen")
+![Login/Register Screen](screenshots/screen6.png "Login or register Screen")
 ![Contact List](screenshots/screen1.png "Contact List")
 ![User dialog](screenshots/screen2.png "Contact List user Dialog")
 ![Chat screen](screenshots/screen3.png "List of blog posts")
 ![Chat Menu](screenshots/screen4.png "List of Blog Posts with the filter option")
-![Welcome Screen](screenshots/screen5.png "Welcome screen")
-![Login/Register Screen](screenshots/screen6.png "Login or register Screen")
+
 
 <br>
  In app real images.
