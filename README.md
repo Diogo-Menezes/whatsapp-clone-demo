@@ -35,8 +35,8 @@ I used parse server for login and registration, but I had plans to port the logi
  In app real images.
 <br>
  
-### Image credits
-#### The persons used in the images are for demonstration purposes only. Models downloaded from [Unsplash.com](https://unsplash.com/) 
+## Image credits
+The persons used in the images are for demonstration purposes only. Models downloaded from [Unsplash.com](https://unsplash.com/) 
 
   <br>
   <br>
