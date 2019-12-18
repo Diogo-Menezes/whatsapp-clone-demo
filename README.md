@@ -22,7 +22,7 @@ I used parse server for login and registration, but I had plans to port the logi
 ![Chat screen](screenshots/screen3.png "List of blog posts")
 ![Chat Menu](screenshots/screen4.png "List of Blog Posts with the filter option")
 
-* Images and models used for demostration purposes only. Credits [Unsplash.com](https://unsplash.com/) 
+* Images and models used for demonstration purposes only. Credits [Unsplash.com](https://unsplash.com/) 
   <br>
   <br>
   
@@ -35,8 +35,7 @@ I used parse server for login and registration, but I had plans to port the logi
   
 # Non-Goals
   <p>The main focus of this project was on developing the UI design and some key-features.</p>
-  <p></p>
-  <br>
+  <p>In this moment there is no updates for the current app planned.</p>
   <br>
   <br>
   <br>
