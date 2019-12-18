@@ -44,5 +44,5 @@ I used parse server for login and registration, but I had plans to port the logi
   
 ---
 
-### Disclaimer
+# Disclaimer
 ###### All the code was developed and written by me.
