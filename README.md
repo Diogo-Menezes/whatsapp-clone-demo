@@ -54,4 +54,5 @@ I used parse server for login and registration, but I had plans to port the logi
   <br>
   
 ## Disclaimer
-###### All the code was developed and written by me.
+###### All the code was developed and written by me. This project is developed only for personal use.
+###### I don't own the Logo and Trademark.
